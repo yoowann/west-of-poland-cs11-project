@@ -114,7 +114,7 @@ main()
 '''
 STAGE DOCUMENTATION
 
-    #Water Test
+    # Water Test
     gs1 = Stage_1([
         ["T", "T", "T", "T", "T", "T", "T"],
         ["T", ".", ".", ".", ".", ".", "T"],
@@ -147,7 +147,7 @@ STAGE DOCUMENTATION
         ["T", "T", "T", "T", "T", "T", "T"],
         ], lara)
        
-    #Maximum Parameter Test 
+    # Maximum Parameter Test 
     gs1 = Stage_1([
         ["T" for i in range(30)],
         *[["T", *["." for j in range(28)], "T"] for k in range(28)],
