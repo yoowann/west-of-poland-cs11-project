@@ -117,13 +117,14 @@ class Stage_1():
 def main_menu():
     lara = Player(2, 3)
     gs1 = Stage_1([
-        ["T", "T", "T", "T", "T", "T", "T"],
-        ["T", ".", ".", ".", ".", ".", "T"],
-        ["T", ".", "x", ".", "*", ".", "T"],
-        ["T", ".", ".", "~", ".", ".", "T"],
-        ["T", ".", "+", ".", ".", ".", "T"],
-        ["T", ".", ".", "+", ".", ".", "T"],
-        ["T", "T", "T", "T", "T", "T", "T"],
+        ["T", "T", "T", "T", "T", "T", "T", "T"],
+        ["T", ".", ".", ".", ".", ".", "~", "T"],
+        ["T", ".", "x", "R", "*", "T", "~", "T"],
+        ["T", ".", ".", "T", "T", "T", "~", "T"],
+        ["T", ".", "+", "T", "+", "~", "+", "T"],
+        ["T", ".", ".", "T", "T", "T", "~", "T"],
+        ["T", ".", ".", ".", ".", "+", ".", "T"],
+        ["T", "T", "T", "T", "T", "T", "T", "T"]
         ], lara)
     skipped = False
     first = True
@@ -132,7 +133,7 @@ def main_menu():
         gs1.clear_modify(gs1.grid, first)
        
         a = input(f"\nWelcome to the Main Menu of \"Shroom Runner!\" \n\n[Controls]\n1. U - Move Up\n2. D - Move Down\n3. L - Move Left\n4. R - Move Right\n5. P - Pick Up Item\n6. ! - Reset Stage\n\n[i] Number of Mushrooms Collected: {gs1.mushrooms}\n[i] Currently Holding: {"".join(gs1.pl_i.inv)}\n\nEnter moves: ")
-        skipped = True if a == "E" else False
+        skipped = True if a.upper() == "E" else False
         
         gs1.move(a, gs1.pl_i.y, gs1.pl_i.x)
         first = False
@@ -192,6 +193,29 @@ STAGE DOCUMENTATION
         ["T", ".", "+", ".", ".", ".", "T"],
         ["T", ".", ".", "+", ".", ".", "T"],
         ["T", "T", "T", "T", "T", "T", "T"],
+        ], lara)
+     
+    #All Functionality Test 1   
+    gs1 = Stage_1([
+        ["T", "T", "T", "T", "T", "T", "T"],
+        ["T", ".", ".", ".", ".", ".", "T"],
+        ["T", ".", "x", "R", "*", ".", "T"],
+        ["T", ".", ".", "~", ".", ".", "T"],
+        ["T", ".", "+", ".", ".", ".", "T"],
+        ["T", ".", ".", "+", ".", ".", "T"],
+        ["T", "T", "T", "T", "T", "T", "T"],
+        ], lara)
+    
+    #All Functionality Test 2
+    gs1 = Stage_1([
+        ["T", "T", "T", "T", "T", "T", "T", "T"],
+        ["T", ".", ".", ".", ".", ".", "~", "T"],
+        ["T", ".", "x", "R", "*", "T", "~", "T"],
+        ["T", ".", ".", "T", "T", "T", "~", "T"],
+        ["T", ".", "+", "T", "+", "~", "+", "T"],
+        ["T", ".", ".", "T", "T", "T", "~", "T"],
+        ["T", ".", ".", ".", ".", "+", ".", "T"],
+        ["T", "T", "T", "T", "T", "T", "T", "T"]
         ], lara)
        
     #Maximum Parameter Test 
