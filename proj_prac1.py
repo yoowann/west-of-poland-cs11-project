@@ -25,10 +25,9 @@ class Stage_1():
     
     def move(self, move_sequence, y, x):
         for _ in move_sequence:
-            if _.upper() in ("U", "D", "L", "R"):
-                if self.mushrooms == self.win_condition: self.outcome = 1
-                self.pl_i.x += 1 if (_.upper() == "R" and self.pl_i.x < len(self.grid[0]) - 1 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y) and not self.outcome) else -1 if (_.upper() == "L" and self.pl_i.x > 0 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y) and not self.outcome) else 0
-                self.pl_i.y += 1 if (_.upper() == "D" and self.pl_i.y < len(self.grid) - 1 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y) and not self.outcome) else -1 if (_.upper() == "U" and self.pl_i.y > 0 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y) and not self.outcome) else 0
+            if _.upper() in ("U", "D", "L", "R") and not self.outcome:
+                self.pl_i.x += 1 if (_.upper() == "R" and self.pl_i.x < len(self.grid[0]) - 1 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y)) else -1 if (_.upper() == "L" and self.pl_i.x > 0 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y)) else 0
+                self.pl_i.y += 1 if (_.upper() == "D" and self.pl_i.y < len(self.grid) - 1 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y)) else -1 if (_.upper() == "U" and self.pl_i.y > 0 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y)) else 0
                 self.curr_tile = self.grid[self.pl_i.y][self.pl_i.x] if self.grid[self.pl_i.y][self.pl_i.x] != "L" else "."
             elif _.upper() == "P":
                 if self.curr_tile not in (".", "-") and not self.pl_i.inv:
@@ -36,7 +35,7 @@ class Stage_1():
                     self.grid[self.pl_i.y][self.pl_i.x] = "."
                     self.curr_tile = "."
                     self.last_tile = "."
-            else:
+            elif _.upper() not in ("U", "D", "L", "R", "P", "!"):
                 self.pl_i.x = x
                 self.pl_i.y = y
                 return
@@ -97,7 +96,7 @@ class Stage_1():
                 return False
             case '~':
                 self.outcome = 2
-                return False       
+                return True       
             case 'R':
                 if self.grid[y_chk][x_chk] == '.':
                     self.grid[y_chk][x_chk] = 'R'
@@ -111,6 +110,8 @@ class Stage_1():
                     return False
             case '+':
                 self.mushrooms += 1
+                if self.mushrooms == self.win_condition:
+                    self.outcome = 1
                 self.grid[y][x] = '.'
                 return True
                            
@@ -142,6 +143,7 @@ def main_menu():
             gs1.clear_modify(gs1.grid, False)
             
             print("\nYou won!" if gs1.outcome == 1 else "\nYou lost!")
+            print(f"Number of Mushrooms Collected: {gs1.mushrooms}")
         
 def main():
     main_menu()
