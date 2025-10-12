@@ -2,16 +2,10 @@ import sys
 import argparse
 
 class Player():
-    def __init__(self, x, y, ):
+    def __init__(self, x, y):
         self.x = x - 1
         self.y = y - 1
         self.inv = ""
-        
-    def add(self, item):
-        if self.inv:
-            print(f"{self.name} has item already:\n{self.inv}")
-        else:
-            self.inv.append(item)
  
 class Stage_1():
     def __init__(self, grid, pl_i):
@@ -23,16 +17,18 @@ class Stage_1():
         self.win_condition = sum([sum(1 if b == "+" else 0 for b in a) for a in self.grid])
         self.curr_tile = "."
         self.last_tile = "."
+        self.rock_tile = "."
+        self.emojis = {'.': '　', 'L': '👩', 'T': '🌲', '+': '🍄', 'R': '🪨', '~': '🟦', '-': '⚪', 'x': '🪓', '*': '🔥'}
     
     def move(self, move_sequence, y, x):
         for _ in move_sequence:
             if _.upper() in ("U", "D", "L", "R") and not self.outcome:
                 self.pl_i.x += 1 if (_.upper() == "R" and self.pl_i.x < len(self.grid[0]) - 1 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y)) else -1 if (_.upper() == "L" and self.pl_i.x > 0 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y)) else 0
                 self.pl_i.y += 1 if (_.upper() == "D" and self.pl_i.y < len(self.grid) - 1 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y)) else -1 if (_.upper() == "U" and self.pl_i.y > 0 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y)) else 0
-                self.curr_tile = self.grid[self.pl_i.y][self.pl_i.x] if self.grid[self.pl_i.y][self.pl_i.x] != "L" else "."
+                self.curr_tile = self.grid[self.pl_i.y][self.pl_i.x] if self.grid[self.pl_i.y][self.pl_i.x] != "L" else self.curr_tile
             elif _.upper() == "P":
                 if self.curr_tile not in (".", "-") and not self.pl_i.inv:
-                    self.pl_i.inv = self.curr_tile
+                    self.pl_i.inv = self.emojis[self.curr_tile]
                     self.grid[self.pl_i.y][self.pl_i.x] = "."
                     self.curr_tile = "."
                     self.last_tile = "."
@@ -51,8 +47,10 @@ class Stage_1():
             for _ in range(len(self.grid) + 15):
                 sys.stdout.write("\033[F")  # Move cursor up one line
                 sys.stdout.write("\033[K")  # Clear line from cursor to end`
+
+        nice = [[self.emojis[a] for a in b] for b in new_grid]
         
-        for line in new_grid:
+        for line in nice:
             sys.stdout.write("".join(line) + "\n")
         sys.stdout.flush()
         
@@ -86,11 +84,11 @@ class Stage_1():
         match(self.grid[y][x]):
             case '.' | '-' | 'x' | '*' | 'L': return True
             case 'T': 
-                if self.pl_i.inv == "x":
+                if self.pl_i.inv in ("x", "🪓"):
                     self.grid[y][x] = '.'
                     self.pl_i.inv = ''
                     return True
-                elif self.pl_i.inv == "*":
+                elif self.pl_i.inv in ("*", "🔥"):
                     self.scorch(y, x)
                     self.pl_i.inv = ''
                     return True
@@ -99,13 +97,14 @@ class Stage_1():
                 self.outcome = 2
                 return True       
             case 'R':
-                if self.grid[y_chk][x_chk] == '.':
+                if self.grid[y_chk][x_chk] in ('.', '-', 'L'):
+                    self.grid[y][x] = self.rock_tile if self.curr_tile == self.rock_tile else '.'
+                    self.rock_tile = self.grid[y_chk][x_chk]
                     self.grid[y_chk][x_chk] = 'R'
-                    self.grid[y][x] = '.'
                     return True
                 elif self.grid[y_chk][x_chk] == '~':
+                    self.grid[y][x] = self.rock_tile
                     self.grid[y_chk][x_chk] = '-'
-                    self.grid[y][x] = '.'
                     return True
                 else:
                     return False
@@ -149,18 +148,6 @@ def main_menu(stage_file, moves, output_file):
 
     lara = Player(*player_location)
     gs1 = Stage_1(stage, lara)
-
-    # lara = Player(2, 3)
-    # gs1 = Stage_1([
-    #     ["T", "T", "T", "T", "T", "T", "T", "T"],
-    #     ["T", ".", ".", ".", ".", ".", "~", "T"],
-    #     ["T", ".", "x", "R", "*", "T", "~", "T"],
-    #     ["T", ".", ".", "T", "T", "T", "~", "T"],
-    #     ["T", ".", "+", "T", "+", "~", "+", "T"],
-    #     ["T", ".", ".", "T", "T", "T", "~", "T"],
-    #     ["T", ".", ".", ".", ".", "+", ".", "T"],
-    #     ["T", "T", "T", "T", "T", "T", "T", "T"]
-    #     ], lara)
     
     skipped = False
     first = True
@@ -209,82 +196,3 @@ def main():
     main_menu(args.stage, args.move, args.output)
         
 main()
-
-'''
-STAGE DOCUMENTATION
-
-    #Water Test
-    gs1 = Stage_1([
-        ["T", "T", "T", "T", "T", "T", "T"],
-        ["T", ".", ".", ".", ".", ".", "T"],
-        ["T", ".", ".", ".", ".", ".", "T"],
-        ["T", ".", ".", "~", ".", ".", "T"],
-        ["T", ".", ".", ".", ".", ".", "T"],
-        ["T", ".", ".", ".", ".", ".", "T"],
-        ["T", "T", "T", "T", "T", "T", "T"],
-        ], lara)
-        
-    #Rock Test
-    gs1 = Stage_1([
-        ["T", "T", "T", "T", "T", "T", "T"],
-        ["T", ".", "R", ".", "R", ".", "T"],
-        ["T", ".", "R", ".", "R", ".", "T"],
-        ["T", ".", ".", "~", ".", ".", "T"],
-        ["T", ".", ".", ".", ".", ".", "T"],
-        ["T", ".", ".", ".", ".", ".", "T"],
-        ["T", "T", "T", "T", "T", "T", "T"],
-        ], lara)
-        
-    #Rock and Mushrooms Test
-    gs1 = Stage_1([
-        ["T", "T", "T", "T", "T", "T", "T"],
-        ["T", ".", "R", ".", "R", ".", "T"],
-        ["T", ".", "R", ".", "R", ".", "T"],
-        ["T", ".", ".", "~", ".", ".", "T"],
-        ["T", ".", "+", ".", ".", ".", "T"],
-        ["T", ".", ".", "+", ".", ".", "T"],
-        ["T", "T", "T", "T", "T", "T", "T"],
-        ], lara)
-        
-    #Items and Mushrooms Test
-    gs1 = Stage_1([
-        ["T", "T", "T", "T", "T", "T", "T"],
-        ["T", ".", ".", ".", ".", ".", "T"],
-        ["T", ".", "x", ".", "*", ".", "T"],
-        ["T", ".", ".", "~", ".", ".", "T"],
-        ["T", ".", "+", ".", ".", ".", "T"],
-        ["T", ".", ".", "+", ".", ".", "T"],
-        ["T", "T", "T", "T", "T", "T", "T"],
-        ], lara)
-     
-    #All Functionality Test 1   
-    gs1 = Stage_1([
-        ["T", "T", "T", "T", "T", "T", "T"],
-        ["T", ".", ".", ".", ".", ".", "T"],
-        ["T", ".", "x", "R", "*", ".", "T"],
-        ["T", ".", ".", "~", ".", ".", "T"],
-        ["T", ".", "+", ".", ".", ".", "T"],
-        ["T", ".", ".", "+", ".", ".", "T"],
-        ["T", "T", "T", "T", "T", "T", "T"],
-        ], lara)
-    
-    #All Functionality Test 2
-    gs1 = Stage_1([
-        ["T", "T", "T", "T", "T", "T", "T", "T"],
-        ["T", ".", ".", ".", ".", ".", "~", "T"],
-        ["T", ".", "x", "R", "*", "T", "~", "T"],
-        ["T", ".", ".", "T", "T", "T", "~", "T"],
-        ["T", ".", "+", "T", "+", "~", "+", "T"],
-        ["T", ".", ".", "T", "T", "T", "~", "T"],
-        ["T", ".", ".", ".", ".", "+", ".", "T"],
-        ["T", "T", "T", "T", "T", "T", "T", "T"]
-        ], lara)
-       
-    #Maximum Parameter Test 
-    gs1 = Stage_1([
-        ["T" for i in range(30)],
-        *[["T", *["." for j in range(28)], "T"] for k in range(28)],
-        ["T" for m in range(30)]
-        ], lara)
-'''
-    
