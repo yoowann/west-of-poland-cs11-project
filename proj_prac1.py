@@ -27,8 +27,8 @@ class Stage_1():
         for _ in move_sequence:
             if _.upper() in ("U", "D", "L", "R"):
                 if self.mushrooms == self.win_condition: self.outcome = 1
-                self.pl_i.x += 1 if (_ == "R" and self.pl_i.x < len(self.grid[0]) - 1 and self.analyze(_, self.pl_i.x, self.pl_i.y) and not self.outcome) else -1 if (_ == "L" and self.pl_i.x > 0 and self.analyze(_, self.pl_i.x, self.pl_i.y) and not self.outcome) else 0
-                self.pl_i.y += 1 if (_ == "D" and self.pl_i.y < len(self.grid) - 1 and self.analyze(_, self.pl_i.x, self.pl_i.y) and not self.outcome) else -1 if (_ == "U" and self.pl_i.y > 0 and self.analyze(_, self.pl_i.x, self.pl_i.y) and not self.outcome) else 0
+                self.pl_i.x += 1 if (_.upper() == "R" and self.pl_i.x < len(self.grid[0]) - 1 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y) and not self.outcome) else -1 if (_.upper() == "L" and self.pl_i.x > 0 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y) and not self.outcome) else 0
+                self.pl_i.y += 1 if (_.upper() == "D" and self.pl_i.y < len(self.grid) - 1 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y) and not self.outcome) else -1 if (_.upper() == "U" and self.pl_i.y > 0 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y) and not self.outcome) else 0
                 self.curr_tile = self.grid[self.pl_i.y][self.pl_i.x] if self.grid[self.pl_i.y][self.pl_i.x] != "L" else "."
             elif _.upper() == "P":
                 if self.curr_tile not in (".", "-") and not self.pl_i.inv:
