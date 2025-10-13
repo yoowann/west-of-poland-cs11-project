@@ -286,3 +286,153 @@ Sounds good 👍 — happy coding, and glad I could help you spot that sneaky `=
 If you ever run into odd recursion behavior or need help debugging how your grid updates step-by-step, just drop your snippet here and I can walk through the logic with you.
 
 Good luck with your project, and happy scorching 🔥
+
+## "Unit Testing with OOP Python using Pytest" (`Gemini Nano`)
+
+Unit testing object-oriented Python code with Pytest involves creating test files and functions that verify the behavior of your classes and their methods.
+
+### 1. Project Setup:
+
+install pytest.
+
+```
+pip install pytest
+```
+
+- Structure: Organize your project with your main application code in one directory (e.g., `src/`) and your tests in another (e.g., `tests/`).
+
+### 2. Writing the Class to Test:
+
+Create your Python class with its methods. For example, a `Calculator` class:
+
+```py
+# src/calculator.py
+class Calculator:
+    def add(self, a, b):
+        return a + b
+
+    def subtract(self, a, b):
+        return a - b
+
+    def divide(self, a, b):
+        if b == 0:
+            raise ValueError("Cannot divide by zero.")
+        return a / b
+```
+
+### 3. Writing Pytest Tests:
+
+- **Test File Naming:** Create a test file (e.g., `tests/test_calculator.py`) that starts with `test_` or ends with `_test.py`.
+- **Test Function Naming:** Define test functions within the file, each also starting with `test_`.
+- **Assertions:** Use the built-in `assert` statement to check conditions.
+- **Testing Methods:** Instantiate your class within the test function and call its methods.
+
+```py
+# tests/test_calculator.py
+import pytest
+from src.calculator import Calculator
+
+class TestCalculator:  # Optional: Group tests for a class within a test class
+    def setup_method(self):
+        """Setup method executed before each test method."""
+        self.calc = Calculator()
+
+    def test_add(self):
+        assert self.calc.add(2, 3) == 5
+
+    def test_subtract(self):
+        assert self.calc.subtract(5, 2) == 3
+
+    def test_divide_positive(self):
+        assert self.calc.divide(10, 2) == 5.0
+
+    def test_divide_by_zero(self):
+        with pytest.raises(ValueError, match="Cannot divide by zero."):
+            self.calc.divide(10, 0)
+```
+
+### 4. Running Tests:
+
+Navigate to your project's root directory in the terminal and run Pytest:
+
+```
+pytest
+```
+
+### Key Concepts for OOP Testing with Pytest:
+
+- **Fixtures:** Use Pytest fixtures (`@pytest.fixture`) to set up common test data or objects (e.g., creating an instance of your class) and tear them down. This promotes reusability and reduces duplication.
+- **Parameterization:** Use `@pytest.mark.parametrize` to run the same test function with different sets of inputs, efficiently testing various scenarios.
+- **Mocking:** For isolating units and avoiding external dependencies (like databases or APIs), use `unittest.mock` or Pytest's `monkeypatch` fixture to replace real objects with mock objects.
+- **Test Classes:** While not strictly required by Pytest, organizing tests for a specific class within a test class (e.g., `class TestMyClass:`) can improve structure and allow for `setup_method` and `teardown_method` for common setup/teardown logic.
+
+## "How to Use Pytest on Class Objects that are Modified by a Function" (`Gemini Nano`)
+
+To use `pytest` on class objects that are modified by a function, you can leverage `pytest` fixtures, especially those with a class or function scope, and potentially `monkeypatch` for controlled modifications.
+
+### 1. Using Fixtures for Setup and Teardown
+
+- **Define a fixture to create and potentially modify the class instance:**
+
+```py
+# conftest.py or your test file
+    import pytest
+
+    class MyClass:
+        def __init__(self, value):
+            self.value = value
+
+        def modify_self(self, new_value):
+            self.value = new_value
+
+    @pytest.fixture
+    def modified_instance():
+        instance = MyClass(10)
+        # Apply the modification function
+        instance.modify_self(20)
+        return instance
+```
+
+- **Use the fixture in your test functions:**
+
+```py
+    # test_my_class.py
+    def test_modified_value(modified_instance):
+        assert modified_instance.value == 20
+```
+
+### 2. Using `monkeypatch` for Temporary Modifications (if needed):
+
+If the "modification function" is external or part of a dependency you want to control during testing, `monkeypatch` allows you to temporarily replace it.
+
+```py
+# test_my_class.py
+import pytest
+
+class MyClass:
+    def __init__(self, value):
+        self.value = value
+
+    def external_modifier(self, new_value):
+        # This function might be complex or involve external calls
+        self.value = new_value
+
+def test_external_modification(monkeypatch):
+    instance = MyClass(5)
+
+    # Temporarily replace the external_modifier function
+    def mock_modifier(self, new_value):
+        self.value = new_value * 2 # Mocked behavior
+    
+    monkeypatch.setattr(instance, 'external_modifier', mock_modifier)
+
+    instance.external_modifier(10)
+    assert instance.value == 20 # Expecting the mocked behavior
+```
+
+### Explanation:
+
+- **Fixtures (`@pytest.fixture`):** These provide a way to set up a "baseline" state for your tests. You can instantiate your class within a fixture and apply the modifying function to it before the test function receives the object. `pytest` handles the setup and teardown for you.
+- `monkeypatch`: This built-in `pytest` fixture allows you to temporarily change the behavior of functions, methods, or attributes during a test. It's useful when you need to isolate the class under test from its dependencies or control how a modification function behaves.
+
+Choose the method that best suits your testing scenario. Fixtures are generally preferred for setting up test data and objects, while `monkeypatch` is powerful for controlling external interactions or complex behaviors.

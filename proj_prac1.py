@@ -15,9 +15,9 @@ class Stage_1():
         self.outcome = 0
         self.mushrooms = 0
         self.win_condition = sum([sum(1 if b == "+" else 0 for b in a) for a in self.grid])
-        self.curr_tile = "."
-        self.last_tile = "."
-        self.rock_tile = "."
+        self.curr_tile = "." #tracks the tile Lara is currently standing on, used for item pickups
+        self.last_tile = "." #tracks the tile below Lara before movement, used to replace the tile Lara exits with its expected tile
+        self.rock_tile = "." #tracks the tile under a rock tile, used to monitor if a paved tile is below a rock tile
         self.emojis = {'.': '　', 'L': '👩', 'T': '🌲', '+': '🍄', 'R': '🪨', '~': '🟦', '-': '⚪', 'x': '🪓', '*': '🔥'}
     
     def move(self, move_sequence, y, x):
@@ -27,7 +27,7 @@ class Stage_1():
                 self.pl_i.y += 1 if (_.upper() == "D" and self.pl_i.y < len(self.grid) - 1 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y)) else -1 if (_.upper() == "U" and self.pl_i.y > 0 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y)) else 0
                 self.curr_tile = self.grid[self.pl_i.y][self.pl_i.x] if self.grid[self.pl_i.y][self.pl_i.x] != "L" else self.curr_tile
             elif _.upper() == "P":
-                if self.curr_tile not in (".", "-") and not self.pl_i.inv:
+                if self.curr_tile not in (".", "-", "~") and not self.pl_i.inv:
                     self.pl_i.inv = self.emojis[self.curr_tile]
                     self.grid[self.pl_i.y][self.pl_i.x] = "."
                     self.curr_tile = "."
@@ -163,7 +163,7 @@ def main_menu(stage_file, moves, output_file):
         while(not (skipped or gs1.outcome)):
             gs1.clear_modify(gs1.grid, first)
         
-            a = input(f"\nWelcome to the Main Menu of \"Shroom Runner!\" \n\n[Controls]\n1. U - Move Up\n2. D - Move Down\n3. L - Move Left\n4. R - Move Right\n5. P - Pick Up Item\n6. ! - Reset Stage\n\n[i] Number of Mushrooms Collected: {gs1.mushrooms}\n[i] Currently Holding: {"".join(gs1.pl_i.inv)}\n\nEnter moves: ")
+            a = input(f"\nWelcome to the Main Menu of \"Shroom Runner!\" \n\n[Controls]\n1. U - Move Up\n2. D - Move Down\n3. L - Move Left\n4. R - Move Right\n5. P - Pick Up Item\n6. ! - Reset Stage\n\n[i] Number of Mushrooms Collected: {gs1.mushrooms} 🍄\n[i] Currently Holding: {gs1.pl_i.inv}\n\nEnter moves: ")
             skipped = True if a.upper() == "E" else False
             
             gs1.move(a, gs1.pl_i.y, gs1.pl_i.x)
@@ -173,7 +173,7 @@ def main_menu(stage_file, moves, output_file):
                 gs1.clear_modify(gs1.grid, False)
                 
                 print("\nYou won!" if gs1.outcome == 1 else "\nYou lost!")
-                print(f"Number of Mushrooms Collected: {gs1.mushrooms}")
+                print(f"Number of Mushrooms Collected: {gs1.mushrooms} 🍄")
 
     if output_file:
         with open(output_file, "w") as file:
@@ -195,4 +195,5 @@ def main():
 
     main_menu(args.stage, args.move, args.output)
         
-main()
+if __name__ == "__main__":
+    main()

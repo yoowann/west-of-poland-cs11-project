@@ -1,0 +1,9 @@
+8 8
+TT.TTTTT
+T......T
+T.....~T
+T.....~T
+T....-LT
+T.....~T
+T......T
+TTTTTTTT

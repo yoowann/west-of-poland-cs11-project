@@ -1,0 +1,9 @@
+8 8
+TTTTTTTT
+T......T
+...R..~T
+T...L.~T
+T.+.+~+T
+T.....~T
+T....+.T
+TTTTTTTT
