@@ -3,15 +3,14 @@ import argparse
 
 class Player():
     def __init__(self, x, y):
-        self.x = x - 1
-        self.y = y - 1
+        self.x = x
+        self.y = y
         self.inv = ""
  
 class Stage_1():
     def __init__(self, grid, pl_i):
         self.grid = grid
         self.pl_i = pl_i
-        self.grid[self.pl_i.y][self.pl_i.x] = "L"
         self.outcome = 0
         self.mushrooms = 0
         self.win_condition = sum([sum(1 if b == "+" else 0 for b in a) for a in self.grid])
@@ -21,6 +20,9 @@ class Stage_1():
         self.emojis = {'.': '　', 'L': '👩', 'T': '🌲', '+': '🍄', 'R': '🪨', '~': '🟦', '-': '⚪', 'x': '🪓', '*': '🔥'}
     
     def move(self, move_sequence, y, x):
+        
+        if move_sequence.upper().strip("UDLRP") != '': return
+        
         for _ in move_sequence:
             if _.upper() in ("U", "D", "L", "R") and not self.outcome:
                 self.pl_i.x += 1 if (_.upper() == "R" and self.pl_i.x < len(self.grid[0]) - 1 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y)) else -1 if (_.upper() == "L" and self.pl_i.x > 0 and self.analyze(_.upper(), self.pl_i.x, self.pl_i.y)) else 0
@@ -32,10 +34,6 @@ class Stage_1():
                     self.grid[self.pl_i.y][self.pl_i.x] = "."
                     self.curr_tile = "."
                     self.last_tile = "."
-            elif _.upper() not in ("U", "D", "L", "R", "P", "!"):
-                self.pl_i.x = x
-                self.pl_i.y = y
-                return
         else:
             if self.mushrooms == self.win_condition: self.outcome = 1
             self.grid[y][x] = self.last_tile
@@ -115,14 +113,18 @@ class Stage_1():
                 self.grid[y][x] = '.'
                 return True
 
-def read_stage_file(stage_file): # Returns player location as well as array-fied stage file
+def read_stage_file(stage_file, testing = False): # Returns player location as well as array-fied stage file
     f = open(stage_file)
-    r, c = (int(i) for i in f.readline().split())
+    if not testing: r, c = (int(i) for i in f.readline().split())
     
     player_found = False
     player_x, player_y = 0, 0
 
-    stage = [list(row) for row in f.read().split('\n')]
+    if not testing:
+        stage = [list(row) for row in f.read().split('\n')]
+    else:
+        stages = [[list(row) for row in section.split('\n')] for section in f.read().split('\n\n')]
+        return stages
 
     for row in stage:
         for unit in row:
@@ -138,7 +140,7 @@ def read_stage_file(stage_file): # Returns player location as well as array-fied
         else:
             break
 
-    return (player_x+1, player_y+1), stage
+    return (player_x, player_y), stage
 
 def main_menu(stage_file, moves, output_file):
     if not stage_file:

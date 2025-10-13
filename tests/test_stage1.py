@@ -11,29 +11,20 @@ except FileNotFoundError as e:
     (*read_stage_file(path), "rPRLLRRuRRDDpD"),
     (*read_stage_file(path), "DlRduUpDRlddDRRRr"),
     (*read_stage_file(path), "UUuuuuuURRrDDDdddUUUdPUU"),
-    (*read_stage_file(path), "RpUUDrRDpDDLLRRDDRLUuUUulDDldRRrrRrPp")])
+    (*read_stage_file(path), "RpUUDrRDpDDLLRRDDRLUuUUulDDldRRrrRrPp"),
+    (*read_stage_file(path), "RpUUDrRDpDZLLRRDDRLUuUUulDDldRRrrRrPp")])
 def modified_instance(request):
     stage = Stage_1(request.param[1], Player(*request.param[0]))
     stage.move(request.param[2], stage.pl_i.y, stage.pl_i.x)
     return stage
 
 try:
-    correct = [
-        read_stage_file("./correct/st1.s-o-1.txt")[1],
-        read_stage_file("./correct/st1.s-o-2.txt")[1],
-        read_stage_file("./correct/st1.s-o-3.txt")[1],
-        read_stage_file("./correct/st1.s-o-4.txt")[1]
-    ]
+    correct = read_stage_file("./correct/st1-tests.txt", True)
 except FileNotFoundError as e:
-    correct = [
-        read_stage_file("./tests/correct/st1.s-o-1.txt")[1],
-        read_stage_file("./tests/correct/st1.s-o-2.txt")[1],
-        read_stage_file("./tests/correct/st1.s-o-3.txt")[1],
-        read_stage_file("./tests/correct/st1.s-o-4.txt")[1]
-    ]
+    correct = read_stage_file("./tests/correct/st1-tests.txt", True)
 
 def test_new_stage(modified_instance):
-    assert modified_instance.grid in correct, f"returned \n{"\n".join("".join(a) for a in modified_instance.grid)}\ninstead \ninventory:{modified_instance.pl_i.inv}"
+    assert modified_instance.grid in correct, f"\nReturned\n{"\n".join("".join(a) for a in modified_instance.grid)} \nInventory:{modified_instance.pl_i.inv}"
         
         
         

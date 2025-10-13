@@ -19,20 +19,10 @@ def modified_instance(request):
     return stage
 
 try:
-    correct = [
-        read_stage_file("./correct/std.s-o-1.txt")[1],
-        read_stage_file("./correct/std.s-o-2.txt")[1],
-        read_stage_file("./correct/std.s-o-3.txt")[1],
-        read_stage_file("./correct/std.s-o-4.txt")[1]
-    ]
+    correct = read_stage_file("./correct/std-tests.txt", True)
 except FileNotFoundError as e:
-    correct = [
-        read_stage_file("./tests/correct/std.s-o-1.txt")[1],
-        read_stage_file("./tests/correct/std.s-o-2.txt")[1],
-        read_stage_file("./tests/correct/std.s-o-3.txt")[1],
-        read_stage_file("./tests/correct/std.s-o-4.txt")[1]
-    ]
+    correct = read_stage_file("./tests/correct/std-tests.txt", True)
 
 def test_new_stage(modified_instance):
-    assert modified_instance.grid in correct
+    assert modified_instance.grid in correct, f"\nReturned\n{"\n".join("".join(a) for a in modified_instance.grid)} \nInventory:{modified_instance.pl_i.inv}"
     
