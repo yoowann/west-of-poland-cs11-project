@@ -34,12 +34,12 @@ class Stage:
         ...
 
     def move(self, move_sequence, y, x):
-        '''
-        print("STAGE:")
-        for row in self.grid:
-            print(''.join(row))
-        print(f"CURRENTLY AT {self.pl.y}, {self.pl.x}. MOVE SEQ IS {move_sequence.upper()}")
-        '''
+        
+        # print("STAGE:")
+        # for row in self.grid:
+        #     print(''.join(row))
+        # print(f"CURRENTLY AT {self.pl.y}, {self.pl.x}. MOVE SEQ IS {move_sequence.upper()}")
+        
         if any(move.upper() not in Stage.VALID_MOVES for move in move_sequence):
             # invalid input
             return
@@ -55,11 +55,11 @@ class Stage:
                     self.grid[self.pl.y][self.pl.x] = "."
                     self.curr_tile = "."
                     self.last_tile = "."
-            '''
-            print(f"At the end, {self.pl.y}, {self.pl.x}")
-            for row in self.grid:
-                print(''.join(row))
-            '''
+            
+            # print(f"At the end, {self.pl.y}, {self.pl.x}")
+            # for row in self.grid:
+            #     print(''.join(row))
+            
         else:
             if self.mushrooms == self.win_condition: self.outcome = 1
             self.grid[y][x] = self.last_tile
@@ -136,4 +136,4 @@ class Stage:
                 self.grid[y][x] = '.'
                 return True
             case _: # default case; ideally, the code shouldn't reach this
-                print("Something went wrong!")
+                sys.exit()

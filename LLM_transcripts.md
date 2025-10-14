@@ -746,3 +746,44 @@ def test_data_processing(data_size):
 ```
 
 When you run `pytest`, `test_data_processing` will execute three times, once for each `data_size` (10, 20, and 30). Pytest will automatically generate distinct test IDs for each parametrized run, like `test_data_processing[10]`, `test_data_processing[20]`, etc., making it clear which parameter value was used in case of a failure.
+
+## Deepcopy Python (`Gemini Nano`)
+
+In Python, a deep copy creates a new, independent copy of an object, including all the objects it refers to recursively. This means that if you modify the deep-copied object or any nested objects within it, the original object remains completely unaffected. This contrasts with a shallow copy, where only the top-level object is copied, and nested objects are still referenced, leading to shared modifications. 
+
+To perform a deep copy in Python, you use the `deepcopy()` function from the copy module.
+
+Here is an example:
+
+```py
+import copy
+
+# Original list with nested mutable objects
+original_list = [1, [2, 3], {'a': 4}]
+
+# Create a deep copy
+deep_copied_list = copy.deepcopy(original_list)
+
+# Modify the deep-copied list
+deep_copied_list[0] = 100
+deep_copied_list[1][0] = 200
+deep_copied_list[2]['a'] = 400
+
+print(f"Original list: {original_list}")
+print(f"Deep-copied list: {deep_copied_list}")
+```
+
+### Explanation:
+
+- We import the `copy` module.
+- We create `original_list`, which contains an integer, a nested list, and a nested dictionary.
+- We use `copy.deepcopy(original_list)` to create `deep_copied_list`.
+- We modify elements in `deep_copied_list`, including within its nested list and dictionary.
+- The output shows that `original_list` remains unchanged, demonstrating the independence provided by a deep copy.
+
+### Output of the Example:
+
+```
+Original list: [1, [2, 3], {'a': 4}]
+Deep-copied list: [100, [200, 3], {'a': 400}]
+```

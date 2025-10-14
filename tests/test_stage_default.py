@@ -1,22 +1,31 @@
-import pytest
+import pytest, copy
 from Player import Player
 from Stage import Stage
-from shroom_raider import read_stage_file
+from Processing import read_stage_file
 
 try:
-    draft = read_stage_file("../stage-files/stage-file-default.txt")
-    path = "../stage-files/stage-file-default.txt"
+    player, path = read_stage_file("../stage-files/stage-file-default.txt")
 except FileNotFoundError as e:
-    path = "./stage-files/stage-file-default.txt"
+    player, path = read_stage_file("./stage-files/stage-file-default.txt")
+
+'''
+test_cases takes in the moves the user wants to include in the unit tests.
+deepcopies of the original path variable from the try-except block above is duplicated,
+along with the player information and moves in a comprehension
+'''
+
+#To add a test case, add a new string of moves here
+test_cases = ["rRuUPPPPPPuDrPPP", "rrRlrlrlrlrLLudUuuR", "rrRlrlrlrlrLLudUuR",
+    "rrRlrPPPPPppppPlrlrlrLLudUuRPPPPPPL", "rrRlrPPPPPpGppPlrlrlrLLudUuRPPPPPPL",
+    "dLLpllRrRrDddDDdDrrUuUuuuPuLluUuUPpppUP", "UUdPpPDDRrPppPPpRrLllLUUUUUuuPPpRDUL",
+    "RrrRLrlLpPpPURUDrrULpPpRRDddDddDrLUu", "DLLPDRRUDUDUDLRrRuPPpPUllLLUdLLuUUUUP"
+]
 
 @pytest.fixture(params=[
-    (*read_stage_file(path), "rRuUPPPPPPuDrPPP"),
-    (*read_stage_file(path), "rrRlrlrlrlrLLudUuuR"),
-    (*read_stage_file(path), "rrRlrlrlrlrLLudUuR"),
-    (*read_stage_file(path), "rrRlrPPPPPppppPlrlrlrLLudUuRPPPPPPL"),
-    (*read_stage_file(path), "rrRlrPPPPPpGppPlrlrlrLLudUuRPPPPPPL")])
+    (copy.deepcopy(path), player, moves) for moves in test_cases
+])
 def modified_instance(request):
-    stage = Stage(request.param[1], Player(*request.param[0]))
+    stage = Stage(request.param[0], Player(*request.param[1]))
     stage.move(request.param[2], stage.pl.y, stage.pl.x)
     return stage
 
@@ -26,14 +35,14 @@ except FileNotFoundError as e:
     correct = read_stage_file("./tests/correct/std-tests.txt", True)
 
 def test_new_stage(modified_instance):
-    print("CURRENT")
-    for x in modified_instance.grid:
-        print(''.join(x))
-    for x in correct:
-        for y in x:
-            print(''.join(y))
-        print()
     
+    # print("CURRENT")
+    # for x in modified_instance.grid:
+    #     print(''.join(x))
+    # for x in correct:
+    #     for y in x:
+    #         print(''.join(y))
+    #     print()
 
     assert modified_instance.grid in correct, f"\nReturned\n{"\n".join("".join(a) for a in modified_instance.grid)} \nInventory:{modified_instance.pl.inv}"
     
