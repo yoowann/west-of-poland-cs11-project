@@ -40,7 +40,7 @@ class Stage:
             print(''.join(row))
         print(f"CURRENTLY AT {self.pl.y}, {self.pl.x}. MOVE SEQ IS {move_sequence.upper()}")
         '''
-        if any(move not in Stage.VALID_MOVES for move in move_sequence):
+        if any(move.upper() not in Stage.VALID_MOVES for move in move_sequence):
             # invalid input
             return
         for move in move_sequence:

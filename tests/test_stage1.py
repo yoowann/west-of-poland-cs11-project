@@ -1,7 +1,7 @@
-import pytest, sys
+import pytest
 from Stage import Stage
 from Player import Player
-from main import read_stage_file
+from shroom_raider import read_stage_file
 
 try:
     draft = read_stage_file("../stage-files/stage1.txt")
