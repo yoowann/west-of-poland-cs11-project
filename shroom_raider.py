@@ -24,7 +24,7 @@ def main_menu(stage_file, moves, output_file):
     else:
         while(not (skipped or level.outcome)):
             level.clear_modify(level.grid, first)
-        
+            
             a = input(f"\nWelcome to the Main Menu of \"Shroom Runner!\" \n\n[Controls]\n1. U - Move Up\n2. D - Move Down\n3. L - Move Left\n4. R - Move Right\n5. P - Pick Up Item\n6. ! - Reset Stage\n\n[i] Number of Mushrooms Collected: {level.mushrooms} 🍄\n[i] Currently Holding: {level.pl.inv}\n\nEnter moves: ")
             skipped = True if a.upper() == "E" else False
             

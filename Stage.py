@@ -12,8 +12,8 @@ class Stage:
         win_condition (int) - count of total mushrooms in the grid
         curr_tile (str) - the tile that the Player is currently on
         last_tile (str) - the previous tile that the Player was on
-        rock_title (str) - TODO fill up
-        emojis (dict) - TODO fill up
+        rock_tile (dict) - the tiles under all rocks in the map
+        emojis (dict) - UI representation of the ASCII symbols used in the grid
     """
     emojis = {'.': '　', 'L': '👩', 'T': '🌲', '+': '🍄', 'R': '🪨', '~': '🟦', '-': '⚪', 'x': '🪓', '*': '🔥'}
     VALID_MOVES = set(("U", "D", "L", "R", "P", "!"))
@@ -28,7 +28,7 @@ class Stage:
         self.win_condition = sum(sum(b == "+" for b in a) for a in self.grid)
         self.curr_tile = "."
         self.last_tile = "."
-        self.rock_tile = "."
+        self.rock_tile = {(y, x): "." for x in range(len(self.grid[0])) for y in range(len(self.grid)) if self.grid[y][x] == 'R'}
     
     def make_move(direction, y, x, can_move_there):
         ...
@@ -118,12 +118,14 @@ class Stage:
             case 'R':
                 # check if the tile the rock will be moved to is empty, paved, or water
                 if self.grid[y_chk][x_chk] in ('.', '-', 'L'):
-                    self.grid[y][x] = self.rock_tile if self.curr_tile == self.rock_tile else '.'
-                    self.rock_tile = self.grid[y_chk][x_chk]
+                    self.grid[y][x] = self.rock_tile[(y, x)]
+                    self.rock_tile.pop((y, x))
+                    self.rock_tile[(y_chk, x_chk)] = self.grid[y_chk][x_chk]
                     self.grid[y_chk][x_chk] = 'R'
                     return True
                 elif self.grid[y_chk][x_chk] == '~':
-                    self.grid[y][x] = self.rock_tile
+                    self.grid[y][x] = self.rock_tile[(y, x)]
+                    self.rock_tile.pop((y, x))
                     self.grid[y_chk][x_chk] = '-'
                     return True
                 else:
