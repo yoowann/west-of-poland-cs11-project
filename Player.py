@@ -8,6 +8,6 @@ class Player():
         inv (string) - the Player's currently held item
     """
     def __init__(self, x, y):
-        self.x = x - 1
-        self.y = y - 1
+        self.x = x
+        self.y = y
         self.inv = ""

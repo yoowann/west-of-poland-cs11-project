@@ -1,5 +1,7 @@
 import pytest, sys
-from proj_prac1 import Player, Stage_1, read_stage_file
+from main import read_stage_file
+from Player import Player
+from Stage import Stage
 
 try:
     draft = read_stage_file("../stage-files/stage-file-default.txt")
@@ -14,8 +16,8 @@ except FileNotFoundError as e:
     (*read_stage_file(path), "rrRlrPPPPPppppPlrlrlrLLudUuRPPPPPPL"),
     (*read_stage_file(path), "rrRlrPPPPPpGppPlrlrlrLLudUuRPPPPPPL")])
 def modified_instance(request):
-    stage = Stage_1(request.param[1], Player(*request.param[0]))
-    stage.move(request.param[2], stage.pl_i.y, stage.pl_i.x)
+    stage = Stage(request.param[1], Player(*request.param[0]))
+    stage.move(request.param[2], stage.pl.y, stage.pl.x)
     return stage
 
 try:
@@ -24,5 +26,14 @@ except FileNotFoundError as e:
     correct = read_stage_file("./tests/correct/std-tests.txt", True)
 
 def test_new_stage(modified_instance):
-    assert modified_instance.grid in correct, f"\nReturned\n{"\n".join("".join(a) for a in modified_instance.grid)} \nInventory:{modified_instance.pl_i.inv}"
+    print("CURRENT")
+    for x in modified_instance.grid:
+        print(''.join(x))
+    for x in correct:
+        for y in x:
+            print(''.join(y))
+        print()
+    
+
+    assert modified_instance.grid in correct, f"\nReturned\n{"\n".join("".join(a) for a in modified_instance.grid)} \nInventory:{modified_instance.pl.inv}"
     

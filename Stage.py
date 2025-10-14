@@ -16,8 +16,11 @@ class Stage:
         emojis (dict) - TODO fill up
     """
     emojis = {'.': '　', 'L': '👩', 'T': '🌲', '+': '🍄', 'R': '🪨', '~': '🟦', '-': '⚪', 'x': '🪓', '*': '🔥'}
+    VALID_MOVES = set(("U", "D", "L", "R", "P", "!"))
     def __init__(self, grid, pl):
         self.grid = grid
+        self.rows = len(self.grid)
+        self.cols = len(self.grid[0])
         self.pl = pl
         self.grid[self.pl.y][self.pl.x] = "L"
         self.outcome = 0
@@ -27,8 +30,19 @@ class Stage:
         self.last_tile = "."
         self.rock_tile = "."
     
+    def make_move(direction, y, x, can_move_there):
+        ...
+
     def move(self, move_sequence, y, x):
+        print("STAGE:")
+        for row in self.grid:
+            print(''.join(row))
+        print(f"CURRENTLY AT {self.pl.y}, {self.pl.x}. MOVE SEQ IS {move_sequence.upper()}")
+        if any(move not in Stage.VALID_MOVES for move in move_sequence):
+            # invalid input
+            return
         for move in move_sequence:
+            print(f"{move} -- currently at {self.pl.y}, {self.pl.x}")
             if move.upper() in ("U", "D", "L", "R") and not self.outcome:
                 self.pl.x += 1 if (move.upper() == "R" and self.pl.x < len(self.grid[0]) - 1 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else -1 if (move.upper() == "L" and self.pl.x > 0 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else 0
                 self.pl.y += 1 if (move.upper() == "D" and self.pl.y < len(self.grid) - 1 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else -1 if (move.upper() == "U" and self.pl.y > 0 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else 0
@@ -43,6 +57,9 @@ class Stage:
                 self.pl.x = x
                 self.pl.y = y
                 return
+            print(f"At the end, {self.pl.y}, {self.pl.x}")
+            for row in self.grid:
+                print(''.join(row))
         else:
             if self.mushrooms == self.win_condition: self.outcome = 1
             self.grid[y][x] = self.last_tile
@@ -53,24 +70,25 @@ class Stage:
         if not first:
             for _ in range(len(self.grid) + 15):
                 sys.stdout.write("\033[F")  # Move cursor up one line
-                sys.stdout.write("\033[K")  # Clear line from cursor to end`
+                sys.stdout.write("\033[K")  # Clear line from cursor to end
         nice = [[Stage.emojis[a] for a in b] for b in new_grid]
         for line in nice:
             sys.stdout.write("".join(line) + "\n")
         sys.stdout.flush()
         
     def scorch(self, y, x):
-        r, c = len(self.grid), len(self.grid[0])
+        # find connected component of trees using iterative depth-first search
         stack = [(y, x)]
         visited = {(y, x)}
         possible_moves = [(1, 0), (0, 1), (-1, 0), (0, -1)]
         while len(stack) > 0:
             starting_y, starting_x = stack.pop()
+            self.grid[starting_y][starting_x] = '.'
             for dy, dx in possible_moves:
                 current_y, current_x = starting_y + dy, starting_x + dx
-                if 0 <= current_y < r and 0 <= current_x < c and self.grid[current_y][current_x] == 'T' and (current_y, current_x) not in visited:
+                if 0 <= current_y < self.rows and 0 <= current_x < self.cols and self.grid[current_y][current_x] == 'T' and (current_y, current_x) not in visited:
                     visited.add((current_y, current_x))
-                    self.grid[current_y][current_x] = '.'
+                    stack.append((current_y, current_x))
 
         
     def can_move_here(self, direction, x, y):
@@ -78,18 +96,20 @@ class Stage:
         y += 1 if direction == "D" and self.pl.y < len(self.grid) - 1 else -1 if direction == "U" and self.pl.y > 0 else 0
         x_chk = x + 1 if direction == "R" else x - 1 if direction == "L" else x
         y_chk = y + 1 if direction == "D" else y - 1 if direction == "U" else y
+        print(f"Seeing if player can move to {y}, {x}. Inv is {self.pl.inv}")
         
         match self.grid[y][x]:
-            case '.' | '-' | 'x' | '*' | 'L': return True
+            case '.' | '-' | 'x' | '*' | 'L':
+                return True
             case 'T':
                 # can move to Tree tile if Player has an axe or flamethrower 
                 if self.pl.inv in ("x", "🪓"):
                     self.grid[y][x] = '.'
-                    self.pl.item = ''
+                    self.pl.inv = ''
                     return True
                 if self.pl.inv in ("*", "🔥"):
                     self.scorch(y, x)
-                    self.pl.item = ''
+                    self.pl.inv = ''
                     return True
                 return False
             case '~':
@@ -97,7 +117,7 @@ class Stage:
                 self.outcome = 2
                 return True       
             case 'R':
-                # TODO comment here
+                # check if the tile the rock will be moved to is empty, paved, or water
                 if self.grid[y_chk][x_chk] in ('.', '-', 'L'):
                     self.grid[y][x] = self.rock_tile if self.curr_tile == self.rock_tile else '.'
                     self.rock_tile = self.grid[y_chk][x_chk]
