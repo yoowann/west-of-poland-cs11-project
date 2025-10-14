@@ -8,17 +8,15 @@ try:
 except FileNotFoundError as e:
     player, path = read_stage_file("./stage-files/stage-file-default.txt")
 
-'''
-test_cases takes in the moves the user wants to include in the unit tests.
-deepcopies of the original path variable from the try-except block above is duplicated,
-along with the player information and moves in a comprehension
-'''
+# test_cases takes in the moves the user wants to include in the unit tests.
+# deepcopies of the original path variable from the try-except block above is duplicated,
+# along with the player information and moves in a comprehension
 
 #To add a test case, add a new string of moves here
-test_cases = ["rRuUPPPPPPuDrPPP", "rrRlrlrlrlrLLudUuuR", "rrRlrlrlrlrLLudUuR",
-    "rrRlrPPPPPppppPlrlrlrLLudUuRPPPPPPL", "rrRlrPPPPPpGppPlrlrlrLLudUuRPPPPPPL",
-    "dLLpllRrRrDddDDdDrrUuUuuuPuLluUuUPpppUP", "UUdPpPDDRrPppPPpRrLllLUUUUUuuPPpRDUL",
-    "RrrRLrlLpPpPURUDrrULpPpRRDddDddDrLUu", "DLLPDRRUDUDUDLRrRuPPpPUllLLUdLLuUUUUP"
+test_cases = ["dDwWPPPPPPwSdPPP", "ddDadadadadAAwsWwwD", "ddDadadadadAAwsWwD",
+    "ddDadPPPPPppppPadadadAAwsWwDPPPPPPA", "ddDadPPPPPpGppPadadadAAwsWwDPPPPPPA",
+    "sAApaaDdDdSssSSsSddWwWwwwPwAawWwWPpppWP", "WWsPpPSSDdPppPPpDdAaaAWWWWWwwPPpDSWA",
+    "DddDAdaApPpPWDWSddWApPpDDSssSssSdAWw", "SAAPSDDWSWSWSADdDwPPpPWaaAAWsAAwWWWWP"
 ]
 
 @pytest.fixture(params=[

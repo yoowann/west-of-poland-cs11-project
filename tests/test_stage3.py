@@ -8,14 +8,12 @@ try:
 except FileNotFoundError as e:
     player, path = read_stage_file("./stage-files/stage3.txt")
 
-'''
-test_cases takes in the moves the user wants to include in the unit tests.
-deepcopies of the original path variable from the try-except block above is duplicated,
-along with the player information and moves in a comprehension
-'''
+# test_cases takes in the moves the user wants to include in the unit tests.
+# deepcopies of the original path variable from the try-except block above is duplicated,
+# along with the player information and moves in a comprehension
 
 #To add a test case, add a new string of moves here
-test_cases = ["RPR"]
+test_cases = ["DPD"]
 
 @pytest.fixture(params=[
     (copy.deepcopy(path), player, moves) for moves in test_cases

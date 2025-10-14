@@ -2,21 +2,21 @@ import sys
 
 class Stage:
     """
-    Class for the Stage.
+    Class for the Stage, the object of the Shroom Raider game.
 
     Attributes:
-        grid (2D list of str) - the stage that the Player is playing
-        pl (Player) - Player object, containing details about the Player's position and inventory
-        outcome (int) - 0 if currently playing; 1 if win; 2 if lose
-        mushrooms (int) - count of mushrooms collected
-        win_condition (int) - count of total mushrooms in the grid
-        curr_tile (str) - the tile that the Player is currently on
-        last_tile (str) - the previous tile that the Player was on
-        rock_tile (dict) - the tiles under all rocks in the map
-        emojis (dict) - UI representation of the ASCII symbols used in the grid
+        - grid (2D list of str) - the stage that the Player is playing
+        - pl (Player) - Player object, containing details about the Player's position and inventory
+        - outcome (int) - 0 if currently playing; 1 if win; 2 if lose
+        - mushrooms (int) - count of mushrooms collected
+        - win_condition (int) - count of total mushrooms in the grid
+        - curr_tile (str) - the tile that the Player is currently on
+        - last_tile (str) - the previous tile that the Player was on
+        - rock_tile (dict) - the tiles under all rocks in the map
+        - emojis (dict) - UI representation of the ASCII symbols used in the grid
     """
     emojis = {'.': '　', 'L': '👩', 'T': '🌲', '+': '🍄', 'R': '🪨', '~': '🟦', '-': '⚪', 'x': '🪓', '*': '🔥'}
-    VALID_MOVES = set(("U", "D", "L", "R", "P", "!"))
+    VALID_MOVES = set(("W", "S", "A", "D", "P", "!"))
     def __init__(self, grid, pl):
         self.grid = grid
         self.rows = len(self.grid)
@@ -34,7 +34,14 @@ class Stage:
         ...
 
     def move(self, move_sequence, y, x):
+        '''
+        Moves the character in the grid of Stage according to the input in move_sequence.
         
+        Initially scans for invalid characters in move_sequence; the function is halted if any is detected.
+        
+        After the initial scan, it iterates over each input and checks whether each movement/action is valid
+        and leads to a change in Stage outcome.
+        '''
         # print("STAGE:")
         # for row in self.grid:
         #     print(''.join(row))
@@ -45,9 +52,9 @@ class Stage:
             return
         for move in move_sequence:
             #print(f"{move} -- currently at {self.pl.y}, {self.pl.x}")
-            if move.upper() in ("U", "D", "L", "R") and not self.outcome:
-                self.pl.x += 1 if (move.upper() == "R" and self.pl.x < len(self.grid[0]) - 1 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else -1 if (move.upper() == "L" and self.pl.x > 0 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else 0
-                self.pl.y += 1 if (move.upper() == "D" and self.pl.y < len(self.grid) - 1 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else -1 if (move.upper() == "U" and self.pl.y > 0 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else 0
+            if move.upper() in ("W", "S", "A", "D") and not self.outcome:
+                self.pl.x += 1 if (move.upper() == "D" and self.pl.x < len(self.grid[0]) - 1 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else -1 if (move.upper() == "A" and self.pl.x > 0 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else 0
+                self.pl.y += 1 if (move.upper() == "S" and self.pl.y < len(self.grid) - 1 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else -1 if (move.upper() == "W" and self.pl.y > 0 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else 0
                 self.curr_tile = self.grid[self.pl.y][self.pl.x] if self.grid[self.pl.y][self.pl.x] != "L" else self.curr_tile
             elif move.upper() == "P":
                 if self.curr_tile not in (".", "-") and not self.pl.inv:
@@ -67,6 +74,7 @@ class Stage:
             self.grid[self.pl.y][self.pl.x] = "L"
         
     def clear_modify(self, new_grid, first):
+        '''Formats the terminal to display the state of the new grid by clearing lines.'''
         if not first:
             for _ in range(len(self.grid) + 15):
                 sys.stdout.write("\033[F")  # Move cursor up one line
@@ -77,6 +85,11 @@ class Stage:
         sys.stdout.flush()
         
     def scorch(self, y, x):
+        '''
+        Activates when Player runs into a tree with a flamethrower in inventory.
+        
+        It scans for all trees connected to the initial tree and converts them to empty tiles.
+        '''
         # find connected component of trees using iterative depth-first search
         stack = [(y, x)]
         visited = {(y, x)}
@@ -91,10 +104,11 @@ class Stage:
                     stack.append((current_y, current_x))
 
     def can_move_here(self, direction, x, y):
-        x += 1 if direction == "R" and self.pl.x < len(self.grid[0]) - 1 else -1 if direction == "L" and self.pl.x > 0 else 0
-        y += 1 if direction == "D" and self.pl.y < len(self.grid) - 1 else -1 if direction == "U" and self.pl.y > 0 else 0
-        x_chk = x + 1 if direction == "R" else x - 1 if direction == "L" else x
-        y_chk = y + 1 if direction == "D" else y - 1 if direction == "U" else y
+        '''Analyzes the move to be committed by Player and checks its validity according to tile value and context.'''
+        x += 1 if direction == "D" and self.pl.x < len(self.grid[0]) - 1 else -1 if direction == "A" and self.pl.x > 0 else 0
+        y += 1 if direction == "S" and self.pl.y < len(self.grid) - 1 else -1 if direction == "W" and self.pl.y > 0 else 0
+        x_chk = x + 1 if direction == "D" else x - 1 if direction == "A" else x
+        y_chk = y + 1 if direction == "S" else y - 1 if direction == "W" else y
         #print(f"Seeing if player can move to {y}, {x}. Inv is {self.pl.inv}")
         
         match self.grid[y][x]:

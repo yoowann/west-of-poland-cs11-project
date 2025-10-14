@@ -1,4 +1,11 @@
 def read_stage_file(stage_file, testing = False): # Returns player location as well as array-fied stage file
+    '''
+    Reads a file and returns 1 of 2 objects:
+    1. a pair tuple of ints and grid (2D list of str)
+        - Activates when testing = False and is intended to read a .txt file containing 1 grid.
+    2. a list of grids (2D lists of str) - if testing is True
+        - Activates when testins = True and is intended to read a .txt file containing multiple grids.
+    '''
     f = open(stage_file)
     if not testing: r, c = (int(i) for i in f.readline().split())
     
