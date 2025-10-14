@@ -38,9 +38,7 @@ def main_menu(stage_file, moves, output_file):
         stage_file = "stage-files/stage-file-default.txt"
 
     player_location, stage = read_stage_file(stage_file)
-
-    lara = Player(*player_location)
-    gs1 = Stage(stage, lara)
+    level = Stage(stage, Player(*player_location))
     
     skipped = False
     first = True
@@ -50,32 +48,32 @@ def main_menu(stage_file, moves, output_file):
             a = move
             skipped = True if a.upper() == "E" else False
             
-            gs1.move(a, gs1.pl_i.y, gs1.pl_i.x)
+            level.move(a, level.pl.y, level.pl.x)
             first = False
     else:
-        while(not (skipped or gs1.outcome)):
-            gs1.clear_modify(gs1.grid, first)
+        while(not (skipped or level.outcome)):
+            level.clear_modify(level.grid, first)
         
-            a = input(f"\nWelcome to the Main Menu of \"Shroom Runner!\" \n\n[Controls]\n1. U - Move Up\n2. D - Move Down\n3. L - Move Left\n4. R - Move Right\n5. P - Pick Up Item\n6. ! - Reset Stage\n\n[i] Number of Mushrooms Collected: {gs1.mushrooms} 🍄\n[i] Currently Holding: {gs1.pl_i.inv}\n\nEnter moves: ")
+            a = input(f"\nWelcome to the Main Menu of \"Shroom Runner!\" \n\n[Controls]\n1. U - Move Up\n2. D - Move Down\n3. L - Move Left\n4. R - Move Right\n5. P - Pick Up Item\n6. ! - Reset Stage\n\n[i] Number of Mushrooms Collected: {level.mushrooms} 🍄\n[i] Currently Holding: {level.pl.inv}\n\nEnter moves: ")
             skipped = True if a.upper() == "E" else False
             
-            gs1.move(a, gs1.pl_i.y, gs1.pl_i.x)
+            level.move(a, level.pl.y, level.pl.x)
             first = False
         else:
             if not skipped:
-                gs1.clear_modify(gs1.grid, False)
+                level.clear_modify(level.grid, False)
                 
-                print("\nYou won!" if gs1.outcome == 1 else "\nYou lost!")
-                print(f"Number of Mushrooms Collected: {gs1.mushrooms} 🍄")
+                print("\nYou won!" if level.outcome == 1 else "\nYou lost!")
+                print(f"Number of Mushrooms Collected: {level.mushrooms} 🍄")
 
     if output_file:
         with open(output_file, "w") as file:
-            if gs1.outcome == 1:
+            if level.outcome == 1:
                 file.write("CLEAR \n")
             else:
                 file.write("NOT CLEAR \n")
 
-            file.write("\n".join(("".join(i) for i in gs1.grid)))
+            file.write("\n".join(("".join(i) for i in level.grid)))
             
 def main():
     parser = argparse.ArgumentParser()

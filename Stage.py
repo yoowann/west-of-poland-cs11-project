@@ -34,15 +34,17 @@ class Stage:
         ...
 
     def move(self, move_sequence, y, x):
+        '''
         print("STAGE:")
         for row in self.grid:
             print(''.join(row))
         print(f"CURRENTLY AT {self.pl.y}, {self.pl.x}. MOVE SEQ IS {move_sequence.upper()}")
+        '''
         if any(move not in Stage.VALID_MOVES for move in move_sequence):
             # invalid input
             return
         for move in move_sequence:
-            print(f"{move} -- currently at {self.pl.y}, {self.pl.x}")
+            #print(f"{move} -- currently at {self.pl.y}, {self.pl.x}")
             if move.upper() in ("U", "D", "L", "R") and not self.outcome:
                 self.pl.x += 1 if (move.upper() == "R" and self.pl.x < len(self.grid[0]) - 1 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else -1 if (move.upper() == "L" and self.pl.x > 0 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else 0
                 self.pl.y += 1 if (move.upper() == "D" and self.pl.y < len(self.grid) - 1 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else -1 if (move.upper() == "U" and self.pl.y > 0 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else 0
@@ -53,13 +55,11 @@ class Stage:
                     self.grid[self.pl.y][self.pl.x] = "."
                     self.curr_tile = "."
                     self.last_tile = "."
-            elif move.upper() not in ("U", "D", "L", "R", "P", "!"):
-                self.pl.x = x
-                self.pl.y = y
-                return
+            '''
             print(f"At the end, {self.pl.y}, {self.pl.x}")
             for row in self.grid:
                 print(''.join(row))
+            '''
         else:
             if self.mushrooms == self.win_condition: self.outcome = 1
             self.grid[y][x] = self.last_tile
@@ -90,13 +90,12 @@ class Stage:
                     visited.add((current_y, current_x))
                     stack.append((current_y, current_x))
 
-        
     def can_move_here(self, direction, x, y):
         x += 1 if direction == "R" and self.pl.x < len(self.grid[0]) - 1 else -1 if direction == "L" and self.pl.x > 0 else 0
         y += 1 if direction == "D" and self.pl.y < len(self.grid) - 1 else -1 if direction == "U" and self.pl.y > 0 else 0
         x_chk = x + 1 if direction == "R" else x - 1 if direction == "L" else x
         y_chk = y + 1 if direction == "D" else y - 1 if direction == "U" else y
-        print(f"Seeing if player can move to {y}, {x}. Inv is {self.pl.inv}")
+        #print(f"Seeing if player can move to {y}, {x}. Inv is {self.pl.inv}")
         
         match self.grid[y][x]:
             case '.' | '-' | 'x' | '*' | 'L':
