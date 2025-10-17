@@ -37,7 +37,7 @@ Welcome to the Main Menu of {colored("\"Shroom Runner!\"", "green", attrs=["bold
 5. P - Pick Up Item
 6. ! - {colored("Reset Stage", "yellow", attrs=["bold"])}
                 
-{colored(f"[i] Number of Mushrooms Collected:", "red", attrs=["bold"])} {level.mushrooms} 🍄
+{colored("[i] Number of Mushrooms Collected:", "red", attrs=["bold"])} {level.mushrooms} 🍄
 {colored(f"[i] Currently Standing On: {level.emojis[level.curr_tile]}", "blue", attrs=["bold"])}
 [i] Currently Holding: {level.pl.inv}
                 
@@ -50,8 +50,8 @@ Welcome to the Main Menu of {colored("\"Shroom Runner!\"", "green", attrs=["bold
             if not skipped:
                 level.clear_modify(level.grid, False)
                 
-                print(f"\nYou {colored("won!", "green", attrs=["bold"])}" if level.outcome == 1 else f"\nYou {colored("lost!", "red", attrs=["bold"])}")
-                cprint(f"Number of Mushrooms Collected: {level.mushrooms} 🍄", "yellow")
+                print(f"\nYou {colored("won!", "green", attrs=["bold", "underline"])}" if level.outcome == 1 else f"\nYou {colored("lost!", "red", attrs=["underline"])}")
+                print(f"{colored("[i] Number of Mushrooms Collected:", "red", attrs=["bold"])} {level.mushrooms} 🍄")
 
     if output_file:
         with open(output_file, "w") as file:
