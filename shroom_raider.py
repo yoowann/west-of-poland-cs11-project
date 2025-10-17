@@ -1,3 +1,4 @@
+from termcolor import colored, cprint
 import argparse
 
 from Player import Player
@@ -25,7 +26,22 @@ def main_menu(stage_file, moves, output_file):
         while(not (skipped or level.outcome)):
             level.clear_modify(level.grid, first)
             
-            a = input(f"\nWelcome to the Main Menu of \"Shroom Runner!\" \n\n[Controls]\n1. W - Move Up\n2. S - Move Down\n3. A - Move Left\n4. D - Move Right\n5. P - Pick Up Item\n6. ! - Reset Stage\n\n[i] Number of Mushrooms Collected: {level.mushrooms} 🍄\n[i] Currently Holding: {level.pl.inv}\n\nEnter moves: ")
+            a = input(f"""
+Welcome to the Main Menu of {colored("\"Shroom Runner!\"", "green", attrs=["bold", "underline"])}
+                
+[Controls]
+1. W - Move {colored("Up", "cyan", attrs=["bold"])}
+2. S - Move {colored("Down", "cyan", attrs=["bold"])}
+3. A - Move {colored("Left", "cyan", attrs=["bold"])}
+4. D - Move {colored("Right", "cyan", attrs=["bold"])}
+5. P - Pick Up Item
+6. ! - {colored("Reset Stage", "yellow", attrs=["bold"])}
+                
+{colored(f"[i] Number of Mushrooms Collected:", "red", attrs=["bold"])} {level.mushrooms} 🍄
+{colored(f"[i] Currently Standing On: {level.emojis[level.curr_tile]}", "blue", attrs=["bold"])}
+[i] Currently Holding: {level.pl.inv}
+                
+{colored("Enter moves:", "green", attrs=["bold"])} """)
             skipped = True if a.upper() == "E" else False
             
             level.move(a, level.pl.y, level.pl.x)
@@ -34,8 +50,8 @@ def main_menu(stage_file, moves, output_file):
             if not skipped:
                 level.clear_modify(level.grid, False)
                 
-                print("\nYou won!" if level.outcome == 1 else "\nYou lost!")
-                print(f"Number of Mushrooms Collected: {level.mushrooms} 🍄")
+                print(f"\nYou {colored("won!", "green", attrs=["bold"])}" if level.outcome == 1 else f"\nYou {colored("lost!", "red", attrs=["bold"])}")
+                cprint(f"Number of Mushrooms Collected: {level.mushrooms} 🍄", "yellow")
 
     if output_file:
         with open(output_file, "w") as file:

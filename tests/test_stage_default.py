@@ -16,7 +16,8 @@ except FileNotFoundError as e:
 test_cases = ["dDwWPPPPPPwSdPPP", "ddDadadadadAAwsWwwD", "ddDadadadadAAwsWwD",
     "ddDadPPPPPppppPadadadAAwsWwDPPPPPPA", "ddDadPPPPPpGppPadadadAAwsWwDPPPPPPA",
     "sAApaaDdDdSssSSsSddWwWwwwPwAawWwWPpppWP", "WWsPpPSSDdPppPPpDdAaaAWWWWWwwPPpDSWA",
-    "DddDAdaApPpPWDWSddWApPpDDSssSssSdAWw", "SAAPSDDWSWSWSADdDwPPpPWaaAAWsAAwWWWWP"
+    "DddDAdaApPpPWDWSddWApPpDDSssSssSdAWw", "SAAPSDDWSWSWSADdDwPPpPWaaAAWsAAwWWWWP",
+    "wWAaAASsSDWWwwwWpPppPPPpWdDWWwPPPSAD"
 ]
 
 @pytest.fixture(params=[

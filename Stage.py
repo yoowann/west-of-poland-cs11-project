@@ -76,7 +76,7 @@ class Stage:
     def clear_modify(self, new_grid, first):
         '''Formats the terminal to display the state of the new grid by clearing lines.'''
         if not first:
-            for _ in range(len(self.grid) + 15):
+            for _ in range(len(self.grid) + 16):
                 sys.stdout.write("\033[F")  # Move cursor up one line
                 sys.stdout.write("\033[K")  # Clear line from cursor to end
         nice = [[Stage.emojis[a] for a in b] for b in new_grid]

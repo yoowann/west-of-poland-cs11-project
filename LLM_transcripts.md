@@ -787,3 +787,40 @@ print(f"Deep-copied list: {deep_copied_list}")
 Original list: [1, [2, 3], {'a': 4}]
 Deep-copied list: [100, [200, 3], {'a': 400}]
 ```
+
+## Termcolor Python (`Gemini Nano`)
+
+Termcolor is a Python library used for printing colored and styled text in the terminal. It provides a simple way to add color, background colors, and text attributes like bold, underline, and blink to your console output.
+
+### Key Features and Usage:
+- **Installation:** You can install `termcolor` using pip:
+
+
+```
+pip install termcolor
+```
+
+- **`colored()` function:** The core of `termcolor` is the `colored()` function. It takes the text string, desired text color, optional background color, and a list of attributes as arguments.
+
+```py
+from termcolor import colored
+
+print(colored("Hello, World!", "red"))
+print(colored("This text is blue with a yellow background.", "blue", "on_yellow"))
+print(colored("Bold and underlined text.", "green", attrs=["bold", "underline"]))
+```
+
+- **`cprint()` function:** `termcolor` also offers the `cprint()` function, which works similarly to `colored()` but directly prints the colored text to the console, eliminating the need to explicitly call `print()`.
+
+```py
+from termcolor import cprint
+
+cprint("This is printed directly in cyan.", "cyan")
+```
+
+- **Available Colors and Attributes:**
+    - **Text Colors:** `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`, `grey`, `black`
+    - **Background Colors (prefix with `on_`):** `on_red`, `on_green`, `on_yellow`, `on_blue`, `on_magenta`, `on_cyan`, `on_white`, `on_grey`, `on_black`
+    - **Attributes:** `bold`, `dark`, `underline`, `blink`, `reverse`, `concealed`
+- **Platform Compatibility:** `termcolor` is designed to work across various terminals and shell environments, though specific attribute support (like `blink`) may depend on the terminal emulator's capabilities.
+- **Disabling/Forcing Colors:** You can control color output using environment variables (`ANSI_COLORS_DISABLED`, `NO_COLOR`, `FORCE_COLOR`) or by passing `no_color=True` or `force_color=True` to the `colored()` or `cprint()` functions. This is useful for scenarios like piping output to a file where ANSI escape codes might be undesirable.

@@ -14,7 +14,10 @@ except FileNotFoundError as e:
 
 #To add a test case, add a new string of moves here
 test_cases = ["dPDAADDwDDSSpS", "SaDswWpSDassSDDDd", "WWwwwwwWDDdSSSsssWWWsPWW",
-    "WWwwwwwWDDdSSSsssWWWsPWW", "DpWWSdDSPSZAADDSSDAWwWWwaSSasDDddDdPp"]
+    "WWwwwwwWDDdSSSsssWWWsPWW", "DpWWSdDSPSZAADDSSDAWwWWwaSSasDDddDdPp",
+    "DPWdDSpSWPDDWaaWssWaSwSD", "DSssSSsSpPPPpPpPpDDDddAaASsAWWwwWWwDDSPSSWwwWAsSaSDDDddPpP",
+    "WDDdDSASPWWaasSPssDDAaWWWwwwWwWDdSsAWAsSaSDDDdddDpPp", "WASDWasDwasDwASDssssPPPDDDddDddDdDW",
+    "DDdPsdaWWDSDDPDd"]
 
 @pytest.fixture(params=[
     (copy.deepcopy(path), player, moves) for moves in test_cases
