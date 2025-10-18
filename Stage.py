@@ -69,7 +69,7 @@ class Stage:
             
         else:
             if self.mushrooms == self.win_condition: self.outcome = 1
-            self.grid[y][x] = self.last_tile
+            self.grid[y][x] = self.last_tile if self.grid[y][x] != "R" else "R"
             self.last_tile = self.grid[self.pl.y][self.pl.x]
             self.grid[self.pl.y][self.pl.x] = "L"
         

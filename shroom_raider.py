@@ -1,4 +1,4 @@
-from termcolor import colored, cprint
+from termcolor import colored
 import argparse
 
 from Player import Player
@@ -50,7 +50,7 @@ Welcome to the Main Menu of {colored("\"Shroom Runner!\"", "green", attrs=["bold
             if not skipped:
                 level.clear_modify(level.grid, False)
                 
-                print(f"\nYou {colored("won!", "green", attrs=["bold", "underline"])}" if level.outcome == 1 else f"\nYou {colored("lost!", "red", attrs=["underline"])}")
+                print(f"\nYou {colored("won!", "green", attrs=["bold", "underline"])}\n" if level.outcome == 1 else f"\nYou {colored("lost!", "red", attrs=["underline"])}\n")
                 print(f"{colored("[i] Number of Mushrooms Collected:", "red", attrs=["bold"])} {level.mushrooms} 🍄")
 
     if output_file:

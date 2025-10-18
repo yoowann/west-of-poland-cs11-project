@@ -13,7 +13,16 @@ except FileNotFoundError as e:
 # along with the player information and moves in a comprehension
 
 #To add a test case, add a new string of moves here
-test_cases = ["DPD"]
+test_cases = ["ddDsSaspWWdwwaaSAAsSdWDdDdAWWAsAsdDdDAAWWaAaSaSdddDdDd",
+    "AssDSPDDPDDdWSsaSaaAwAasSWWdWWAwwwAASWDddDddWwpDddSSpSS",
+    "wdAAasAAaaDSSaaPWSDddDSPWaAAawWwWpPpPpPADDDdSSDWDaWWdDDdSsSAWdWWaaaASSDDDDddDd",
+    "aASSwwWAsWDDddddDpDdPdDsDDDdWPSaaaAWDDDdDdDdWsaaWWDdPPppspSPAPWAPSPASD",
+    "sSaSaWWWddDddssSAwwwwwwWdWPsAAWddddDDDSSaaPAAPDDpDDDDDDDASSSsssSPppPPA",
+    "AAaSSDWWwDddAASssDWAWwDDDdDSASDASaWdWWAaaASSdDDdDDAaWwaSaSDDdDdddDWWDDdPdD",
+    "aAassDWWWDdDddWsSSsSsSASPWDWWaaAASSDSsAsASDAAsPsASaSPD", 
+    "AssDSPSASsAWDWDWwaWwwDdWWDdPssdPppPddPddSdDdsssAssSSdDpPpPppPPPp",
+    "DdDSSaSPWDWWAAaaSSdSsaSAsdAAsSASSAPDWwdDdDdSSdsdDDdWAsSSssSdSSAADddDDSAddPW",
+    "DdDSsAWWWwwwwwWwWDWaaAAaAAadDDddDdDPSSDPdDPSddDDWDDPAAsaAWDdDddDDDWsaAWWdaSsSsSPpPPPp"]
 
 @pytest.fixture(params=[
     (copy.deepcopy(path), player, moves) for moves in test_cases
