@@ -22,7 +22,13 @@ test_cases = ["ddDsSaspWWdwwaaSAAsSdWDdDdAWWAsAsdDdDAAWWaAaSaSdddDdDd",
     "aAassDWWWDdDddWsSSsSsSASPWDWWaaAASSDSsAsASDAAsPsASaSPD", 
     "AssDSPSASsAWDWDWwaWwwDdWWDdPssdPppPddPddSdDdsssAssSSdDpPpPppPPPp",
     "DdDSSaSPWDWWAAaaSSdSsaSAsdAAsSASSAPDWwdDdDdSSdsdDDdWAsSSssSdSSAADddDDSAddPW",
-    "DdDSsAWWWwwwwwWwWDWaaAAaAAadDDddDdDPSSDPdDPSddDDWDDPAAsaAWDdDddDDDWsaAWWdaSsSsSPpPPPp"]
+    "DdDSsAWWWwwwwwWwWDWaaAAaAAadDDddDdDPSSDPdDPSddDDWDDPAAsaAWDdDddDDDWsaAWWdaSsSsSPpPPPp",
+    "WAaDddDddPPpPdDPDDSDddDWPsassASsSdaSSDdDSssaDDdsPDDPDp", 
+    "DddSsASpAAPsassWWDwwawwdSssDSAWWDdWdwaAAWAssSSSsSsAAsasSAPSsPwD",
+    "DddSsASpAAPsassWWDwwawwdSssDSAWWDdWdwaAAWAssSSSsSsAAsasSAPSsPDddSAWaaWWdwwdWWPsaSSaSSDdSdDdWDdDWssDdssSDSSsp",
+    "AssDSpWaaawWaDssAPdWwAaADdddDDDDdddDDDddWdPDddDsddwddPaasaawddDDDDDDdddddAAaaAAaaAaAPDDdddDDddDDS",
+    "DdDWdPsasDdsSsSSSasSdsSsSssSDsSaaDdDDdsdPaAAAaA"
+]
 
 @pytest.fixture(params=[
     (copy.deepcopy(path), player, moves) for moves in test_cases

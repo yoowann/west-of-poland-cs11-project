@@ -17,7 +17,9 @@ test_cases = ["dDwWPPPPPPwSdPPP", "ddDadadadadAAwsWwwD", "ddDadadadadAAwsWwD",
     "ddDadPPPPPppppPadadadAAwsWwDPPPPPPA", "ddDadPPPPPpGppPadadadAAwsWwDPPPPPPA",
     "sAApaaDdDdSssSSsSddWwWwwwPwAawWwWPpppWP", "WWsPpPSSDdPppPPpDdAaaAWWWWWwwPPpDSWA",
     "DddDAdaApPpPWDWSddWApPpDDSssSssSdAWw", "SAAPSDDWSWSWSADdDwPPpPWaaAAWsAAwWWWWP",
-    "wWAaAASsSDWWwwwWpPppPPPpWdDWWwPPPSAD"
+    "wWAaAASsSDWWwwwWpPppPPPpWdDWWwPPPSAD", "AWDAAASSDPppPDddDPdDAaPsSdwwDAaAaWwwW",
+    "DddSWwWWDDSSAAWAswSDsswsddsAASdSWSDs", "AwWDSSWWaasWDSwsSDSwWssdWASDPpPpsWwWw",
+    "SaAPaWADSdPDdDddWwwAaSAaaaAwaSDdSSddDPDdWWWWWwwwWWAaAaSsssSsP", "SddPWaaAWDDWDssSASd"
 ]
 
 @pytest.fixture(params=[

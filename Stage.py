@@ -56,7 +56,7 @@ class Stage:
                 self.pl.x += 1 if (move.upper() == "D" and self.pl.x < len(self.grid[0]) - 1 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else -1 if (move.upper() == "A" and self.pl.x > 0 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else 0
                 self.pl.y += 1 if (move.upper() == "S" and self.pl.y < len(self.grid) - 1 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else -1 if (move.upper() == "W" and self.pl.y > 0 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else 0
                 self.curr_tile = self.grid[self.pl.y][self.pl.x] if self.grid[self.pl.y][self.pl.x] != "L" else self.curr_tile
-            elif move.upper() == "P":
+            elif move.upper() == "P" and not self.outcome:
                 if self.curr_tile not in (".", "-") and not self.pl.inv:
                     self.pl.inv = Stage.emojis[self.curr_tile]
                     self.grid[self.pl.y][self.pl.x] = "."

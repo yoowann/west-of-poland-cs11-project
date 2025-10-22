@@ -17,7 +17,11 @@ test_cases = ["DdDdSAapaAAPs", "SPsSSPSssSSDSddDdDdP", "SPDddSSDDDDdAWwDsAsDDDd"
     "AaWwWPwWDDdDdPAaAaASSsDdDPPpppPpDssD", "SPwDdSssssDddDSdssDdddDdDSSa",
     "SPSSSPSSSSSDSdddddDAAAAAAWAaaWWWWWWwwwwwWDddDDPSSSDdWDDDddWDW", "DPDPSdddWWssAAAaaPSsSPW",
     "WASDWASDWASDSPDDDDDddddDDdddDDppPPPAAWSSassdasw", "aaWPWWDDDddPWDdddddDDDdddDSaPss", 
-    "SPSSSPSssssDSDDDdddAAaaAAWaAAWwWWwWwwwWwwDdDdDPWDDDDDDDDDDSAPsaaAsAAAsSSSDdDdd"]
+    "SPSSSPSssssDSDDDdddAAaaAAWaAAWwWWwWwwwWwwDdDdDPWDDDDDDDDDDSAPsaaAsAAAsSSSDdDdd",
+    "SpDDDddSsDDdaWWdSAsDdawWAwWaAdDDddwDPWWpWssS", "SpSSsPSssSsDsdDDDddAAAaaAWAaAWWWwwwwWwWwwPwwDddDDPW",
+    "DDsDddWWdddDdWDwPsAsAAAaASSsSDSsSDwWwDWwD", "WAaPssSSsDdpWSaASsSsDDwwWWSsSsAAWwWwwWWDdPSsDSAASSsssS",
+    "WAAPddDDSsSsSSDddaAAWwWWAAPDDssSSDDDSWDSDAWWWwWwDDwwwWwa"
+]
 
 @pytest.fixture(params=[
     (copy.deepcopy(path), player, moves) for moves in test_cases
