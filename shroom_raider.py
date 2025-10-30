@@ -23,7 +23,7 @@ def main_menu(stage_file, moves, output_file):
             level.move(a, level.pl.y, level.pl.x)
             first = False
     else:
-        while(not (skipped or level.outcome)):
+        while not (skipped or level.outcome):
             level.clear_modify(level.grid, first)
             
             a = input(f"""

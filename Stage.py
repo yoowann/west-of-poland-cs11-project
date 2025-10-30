@@ -1,4 +1,5 @@
 import sys
+from copy import deepcopy
 
 class Stage:
     """
@@ -18,20 +19,22 @@ class Stage:
     emojis = {'.': '　', 'L': '👩', 'T': '🌲', '+': '🍄', 'R': '🪨', '~': '🟦', '-': '⚪', 'x': '🪓', '*': '🔥'}
     VALID_MOVES = set(("W", "S", "A", "D", "P", "!"))
     def __init__(self, grid, pl):
-        self.grid = grid
+        self.original_grid = [row for row in grid]
+        self.original_pl = pl
+        self.initialize_state(self.original_grid, self.original_pl)
+    
+    def initialize_state(self, grid, pl):
+        '''Initializes the game state'''
+        self.grid = deepcopy(grid)
         self.rows = len(self.grid)
         self.cols = len(self.grid[0])
-        self.pl = pl
+        self.pl = deepcopy(pl)
         self.grid[self.pl.y][self.pl.x] = "L"
         self.outcome = 0
         self.mushrooms = 0
-        self.win_condition = sum(sum(b == "+" for b in a) for a in self.grid)
-        self.curr_tile = "."
-        self.last_tile = "."
-        self.rock_tile = {(y, x): "." for x in range(len(self.grid[0])) for y in range(len(self.grid)) if self.grid[y][x] == 'R'}
-    
-    def make_move(direction, y, x, can_move_there):
-        ...
+        self.curr_tile = self.last_tile = "."
+        self.rock_tile = {(y, x) : "." for y in range(self.rows) for x in range(self.cols) if self.grid[y][x] == "R"}
+        self.win_condition = sum(sum(tile == "+" for tile in row) for row in self.grid)
 
     def move(self, move_sequence, y, x):
         '''
@@ -42,16 +45,12 @@ class Stage:
         After the initial scan, it iterates over each input and checks whether each movement/action is valid
         and leads to a change in Stage outcome.
         '''
-        # print("STAGE:")
-        # for row in self.grid:
-        #     print(''.join(row))
-        # print(f"CURRENTLY AT {self.pl.y}, {self.pl.x}. MOVE SEQ IS {move_sequence.upper()}")
-        
         if any(move.upper() not in Stage.VALID_MOVES for move in move_sequence):
-            # invalid input
+            # invalid input; don't do anything
             return
+        last_move = ""
         for move in move_sequence:
-            #print(f"{move} -- currently at {self.pl.y}, {self.pl.x}")
+            last_move = move
             if move.upper() in ("W", "S", "A", "D") and not self.outcome:
                 self.pl.x += 1 if (move.upper() == "D" and self.pl.x < len(self.grid[0]) - 1 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else -1 if (move.upper() == "A" and self.pl.x > 0 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else 0
                 self.pl.y += 1 if (move.upper() == "S" and self.pl.y < len(self.grid) - 1 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else -1 if (move.upper() == "W" and self.pl.y > 0 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else 0
@@ -62,16 +61,15 @@ class Stage:
                     self.grid[self.pl.y][self.pl.x] = "."
                     self.curr_tile = "."
                     self.last_tile = "."
-            
-            # print(f"At the end, {self.pl.y}, {self.pl.x}")
-            # for row in self.grid:
-            #     print(''.join(row))
-            
+            elif move == "!":
+                self.initialize_state(self.original_grid, self.original_pl)
         else:
-            if self.mushrooms == self.win_condition: self.outcome = 1
-            self.grid[y][x] = self.last_tile if self.grid[y][x] != "R" else "R"
-            self.last_tile = self.grid[self.pl.y][self.pl.x]
-            self.grid[self.pl.y][self.pl.x] = "L"
+            if last_move != "!":
+                if self.mushrooms == self.win_condition:
+                    self.outcome = 1
+                self.grid[y][x] = self.last_tile if self.grid[y][x] != "R" else "R"
+                self.last_tile = self.grid[self.pl.y][self.pl.x]
+                self.grid[self.pl.y][self.pl.x] = "L"
         
     def clear_modify(self, new_grid, first):
         '''Formats the terminal to display the state of the new grid by clearing lines.'''
@@ -90,6 +88,7 @@ class Stage:
         
         It scans for all trees connected to the initial tree and converts them to empty tiles.
         '''
+
         # find connected component of trees using iterative depth-first search
         stack = [(y, x)]
         visited = {(y, x)}
@@ -105,12 +104,10 @@ class Stage:
 
     def can_move_here(self, direction, x, y):
         '''Analyzes the move to be committed by Player and checks its validity according to tile value and context.'''
-        x += 1 if direction == "D" and self.pl.x < len(self.grid[0]) - 1 else -1 if direction == "A" and self.pl.x > 0 else 0
-        y += 1 if direction == "S" and self.pl.y < len(self.grid) - 1 else -1 if direction == "W" and self.pl.y > 0 else 0
+        x += 1 if direction == "D" and self.pl.x < self.cols - 1 else -1 if direction == "A" and self.pl.x > 0 else 0
+        y += 1 if direction == "S" and self.pl.y < self.rows - 1 else -1 if direction == "W" and self.pl.y > 0 else 0
         x_chk = x + 1 if direction == "D" else x - 1 if direction == "A" else x
-        y_chk = y + 1 if direction == "S" else y - 1 if direction == "W" else y
-        #print(f"Seeing if player can move to {y}, {x}. Inv is {self.pl.inv}")
-        
+        y_chk = y + 1 if direction == "S" else y - 1 if direction == "W" else y        
         match self.grid[y][x]:
             case '.' | '-' | 'x' | '*' | 'L':
                 return True
@@ -127,7 +124,7 @@ class Stage:
                 return False
             case '~':
                 # player loses
-                self.outcome = 2
+                self.outcome = 2 # TODO make this an enum?
                 return True       
             case 'R':
                 # check if the tile the rock will be moved to is empty, paved, or water
@@ -148,8 +145,8 @@ class Stage:
                 # pick up the mushroom
                 self.mushrooms += 1
                 if self.mushrooms == self.win_condition:
-                    self.outcome = 1
+                    self.outcome = 1 # player wins
                 self.grid[y][x] = '.'
                 return True
-            case _: # default case; ideally, the code shouldn't reach this
+            case _: # default case; ideally should never be reached
                 sys.exit()
