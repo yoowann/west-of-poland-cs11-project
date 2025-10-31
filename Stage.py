@@ -1,6 +1,10 @@
 import sys
 from copy import deepcopy
 
+def clamp(value, min_value, max_value):
+    # Returns value if min_value <= value <= max_value; min_value if value < min_value; and max_value if value > max_value
+    return max(min_value, min(value, max_value))
+
 class Stage:
     """
     Class for the Stage, the object of the Shroom Raider game.
@@ -65,6 +69,7 @@ class Stage:
                 self.initialize_state(self.original_grid, self.original_pl)
         else:
             if last_move != "!":
+                # TODO describe what this block does
                 if self.mushrooms == self.win_condition:
                     self.outcome = 1
                 self.grid[y][x] = self.last_tile if self.grid[y][x] != "R" else "R"
@@ -104,10 +109,26 @@ class Stage:
 
     def can_move_here(self, direction, x, y):
         '''Analyzes the move to be committed by Player and checks its validity according to tile value and context.'''
-        x += 1 if direction == "D" and self.pl.x < self.cols - 1 else -1 if direction == "A" and self.pl.x > 0 else 0
-        y += 1 if direction == "S" and self.pl.y < self.rows - 1 else -1 if direction == "W" and self.pl.y > 0 else 0
-        x_chk = x + 1 if direction == "D" else x - 1 if direction == "A" else x
-        y_chk = y + 1 if direction == "S" else y - 1 if direction == "W" else y        
+        # x += 1 if direction == "D" and self.pl.x < self.cols - 1 else -1 if direction == "A" and self.pl.x > 0 else 0
+        # y += 1 if direction == "S" and self.pl.y < self.rows - 1 else -1 if direction == "W" and self.pl.y > 0 else 0
+        # x_chk = x + 1 if direction == "D" else x - 1 if direction == "A" else x
+        # y_chk = y + 1 if direction == "S" else y - 1 if direction == "W" else y    
+        x_chk, y_chk = x, y
+        match direction:
+            case 'D':
+                x = clamp(x + 1, 0, self.cols - 1)
+                x_chk = clamp(x + 1, 0, self.cols - 1)
+            case 'A':
+                x = clamp(x - 1, 0, self.cols - 1)
+                x_chk = clamp(x - 1, 0, self.cols - 1)
+            case 'S':
+                y = clamp(y + 1, 0, self.rows - 1)
+                y_chk = clamp(y + 1, 0, self.rows - 1)
+            case 'W':
+                y = clamp(y - 1, 0, self.rows - 1)
+                y_chk = clamp(y - 1, 0, self.rows - 1)
+            case _:
+                pass
         match self.grid[y][x]:
             case '.' | '-' | 'x' | '*' | 'L':
                 return True
