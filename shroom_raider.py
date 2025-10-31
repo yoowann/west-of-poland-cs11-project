@@ -38,7 +38,7 @@ Welcome to the Main Menu of {colored("\"Shroom Runner!\"", "green", attrs=["bold
 6. ! - {colored("Reset Stage", "yellow", attrs=["bold"])}
                 
 {colored("[i] Number of Mushrooms Collected:", "red", attrs=["bold"])} {level.mushrooms} 🍄
-{colored(f"[i] Currently Standing On: {level.emojis[level.curr_tile]}", "blue", attrs=["bold"])}
+{colored(f"[i] Item Currently Standing On: {level.EMOJIS[level.curr_tile] if level.curr_tile in "x*" else ""}", "blue", attrs=["bold"])}
 [i] Currently Holding: {level.pl.inv}
                 
 {colored("Enter moves:", "green", attrs=["bold"])} """)

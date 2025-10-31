@@ -12,7 +12,7 @@ except FileNotFoundError as e:
 # deepcopies of the original path variable from the try-except block above is duplicated,
 # along with the player information and moves in a comprehension
 
-#To add a test case, add a new string of moves here
+# To add a test case, add a new string of moves here
 test_cases = ["DdDdSAapaAAPs", "SPsSSPSssSSDSddDdDdP", "SPDddSSDDDDdAWwDsAsDDDd",
     "AaWwWPwWDDdDdPAaAaASSsDdDPPpppPpDssD", "SPwDdSssssDddDSdssDdddDdDSSa",
     "SPSSSPSSSSSDSdddddDAAAAAAWAaaWWWWWWwwwwwWDddDDPSSSDdWDDDddWDW", "DPDPSdddWWssAAAaaPSsSPW",
