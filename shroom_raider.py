@@ -4,6 +4,7 @@ import argparse
 from Player import Player
 from Stage import Stage
 from Processing import read_stage_file
+from Status import Status
 
 def main_menu(stage_file, moves, output_file):
     if not stage_file:
@@ -14,7 +15,7 @@ def main_menu(stage_file, moves, output_file):
     
     skipped = False
     first = True
-    
+
     if moves:
         for move in moves:
             a = move
@@ -23,7 +24,7 @@ def main_menu(stage_file, moves, output_file):
             level.move(a, level.pl.y, level.pl.x)
             first = False
     else:
-        while not (skipped or level.outcome):
+        while not skipped and level.outcome == Status.ONGOING:
             level.clear_modify(level.grid, first)
             
             a = input(f"""
@@ -37,7 +38,7 @@ Welcome to the Main Menu of {colored("\"Shroom Runner!\"", "green", attrs=["bold
 5. P - Pick Up Item
 6. ! - {colored("Reset Stage", "yellow", attrs=["bold"])}
                 
-{colored("[i] Number of Mushrooms Collected:", "red", attrs=["bold"])} {level.mushrooms} 🍄
+{colored("[i] Number of Mushrooms Collected:", "red", attrs=["bold"])} {level.mushrooms} / {level.win_condition} 🍄
 {colored(f"[i] Item Currently Standing On: {level.EMOJIS[level.curr_tile] if level.curr_tile in "x*" else ""}", "blue", attrs=["bold"])}
 [i] Currently Holding: {level.pl.inv}
                 
@@ -50,12 +51,12 @@ Welcome to the Main Menu of {colored("\"Shroom Runner!\"", "green", attrs=["bold
             if not skipped:
                 level.clear_modify(level.grid, False)
                 
-                print(f"\nYou {colored("won!", "green", attrs=["bold", "underline"])}\n" if level.outcome == 1 else f"\nYou {colored("lost!", "red", attrs=["underline"])}\n")
-                print(f"{colored("[i] Number of Mushrooms Collected:", "red", attrs=["bold"])} {level.mushrooms} 🍄")
+                print(f"\nYou {colored("won!", "green", attrs=["bold", "underline"])}\n" if level.outcome == Status.WIN else f"\nYou {colored("lost!", "red", attrs=["underline"])}\n")
+                print(f"{colored("[i] Number of Mushrooms Collected:", "red", attrs=["bold"])} {level.mushrooms} / {level.win_condition} 🍄")
 
     if output_file:
         with open(output_file, "w") as file:
-            if level.outcome == 1:
+            if level.outcome == Status.WIN:
                 file.write("CLEAR \n")
             else:
                 file.write("NOT CLEAR \n")

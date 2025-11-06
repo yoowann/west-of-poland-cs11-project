@@ -1,8 +1,9 @@
 import sys
 from copy import deepcopy
+from Status import Status
 
 def clamp(value, min_value, max_value):
-    # Returns value if min_value <= value <= max_value; min_value if value < min_value; and max_value if value > max_value
+    '''Returns value if min_value <= value <= max_value; min_value if value < min_value; and max_value if value > max_value.'''
     return max(min_value, min(value, max_value))
 
 class Stage:
@@ -14,7 +15,7 @@ class Stage:
         - grid (2D list of str) - the stage that the Player is currently playing
         - original_pl (Player) - the original Player object containing details about the Player's initial position and inventory
         - pl (Player) - Player object, containing details about the Player's position and inventory
-        - outcome (int) - 0 if currently playing; 1 if win; 2 if lose
+        - outcome (Status) - describes whether the game is still ongoing or has been won or lost
         - mushrooms (int) - count of mushrooms collected
         - win_condition (int) - count of total mushrooms in the grid
         - curr_tile (str) - the tile that the Player is currently on
@@ -37,7 +38,7 @@ class Stage:
         self.cols = len(self.grid[0])
         self.pl = deepcopy(pl)
         self.grid[self.pl.y][self.pl.x] = "L"
-        self.outcome = 0
+        self.outcome = Status.ONGOING
         self.mushrooms = 0
         self.curr_tile = self.last_tile = "."
         self.rock_tile = {(y, x) : "." for y in range(self.rows) for x in range(self.cols) if self.grid[y][x] == "R"}
@@ -55,13 +56,23 @@ class Stage:
             if move.upper() not in Stage.VALID_MOVES:
                 # invalid move; stop iterating any further
                 break
-            if self.outcome:
+            if self.outcome != Status.ONGOING:
                 # player has either won or lost; stop iterating any further
                 break
             last_move = move
             if move.upper() in ("W", "S", "A", "D"):
-                self.pl.x += 1 if (move.upper() == "D" and self.pl.x < len(self.grid[0]) - 1 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else -1 if (move.upper() == "A" and self.pl.x > 0 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else 0
-                self.pl.y += 1 if (move.upper() == "S" and self.pl.y < len(self.grid) - 1 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else -1 if (move.upper() == "W" and self.pl.y > 0 and self.can_move_here(move.upper(), self.pl.x, self.pl.y)) else 0
+                if self.can_move_here(move.upper(), self.pl.x, self.pl.y):
+                    match move.upper():
+                        case 'W':
+                            self.pl.y = clamp(self.pl.y - 1, 0, self.rows - 1)
+                        case 'A':
+                            self.pl.x = clamp(self.pl.x - 1, 0, self.cols - 1)
+                        case 'S':
+                            self.pl.y = clamp(self.pl.y + 1, 0, self.rows - 1)
+                        case 'D':
+                            self.pl.x = clamp(self.pl.x + 1, 0, self.cols - 1)
+                        case _:
+                            pass
                 self.curr_tile = self.grid[self.pl.y][self.pl.x] if self.grid[self.pl.y][self.pl.x] != "L" else self.curr_tile
             elif move.upper() == "P":
                 if self.curr_tile not in (".", "-") and not self.pl.inv:
@@ -73,9 +84,9 @@ class Stage:
                 self.initialize_state(self.original_grid, self.original_pl)
                 y, x = self.original_pl.y, self.original_pl.x
         if last_move != "!":
-            # TODO describe what this block does
+            # update the state of the grid
             if self.mushrooms == self.win_condition:
-                self.outcome = 1
+                self.outcome = Status.WIN # player has collected all mushrooms in the stage
             self.grid[y][x] = self.last_tile if self.grid[y][x] != "R" else "R"
             self.last_tile = self.grid[self.pl.y][self.pl.x]
             self.grid[self.pl.y][self.pl.x] = "L"
@@ -144,7 +155,7 @@ class Stage:
                 return False
             case '~':
                 # Player loses
-                self.outcome = 2 # TODO make this an enum?
+                self.outcome = Status.LOSE
                 return True       
             case 'R':
                 # check if the tile the rock will be moved to is empty, paved, or water
@@ -165,7 +176,7 @@ class Stage:
                 # pick up the mushroom
                 self.mushrooms += 1
                 if self.mushrooms == self.win_condition:
-                    self.outcome = 1 # Player wins
+                    self.outcome = Status.WIN
                 self.grid[y][x] = '.'
                 return True
             case _: # default case; should never be reached
