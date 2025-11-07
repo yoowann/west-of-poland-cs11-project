@@ -37,14 +37,5 @@ try:
 except FileNotFoundError as e:
     correct = read_stage_file("./tests/correct/st2-tests.txt", True)
 
-def test_new_stage(modified_instance):
-    
-    # print("OUTPUT WAS:")
-    # for row in modified_instance.grid:
-    #     print(''.join(row))
-    # for x in correct:
-    #     for row in x:
-    #         print(''.join(row))
-    #     print()
-    
+def test_new_stage(modified_instance):    
     assert modified_instance.grid in correct, f"\nReturned\n{"\n".join("".join(a) for a in modified_instance.grid)} \nInventory:{modified_instance.pl.inv}"
