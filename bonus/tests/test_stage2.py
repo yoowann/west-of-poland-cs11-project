@@ -1,13 +1,15 @@
-<<<<<<< HEAD:tests/test_stage2.py
 import pytest, copy
-from Stage import Stage
-from Player import Player
-from Processing import read_stage_file
+from bonus.Stage import Stage
+from bonus.Player import Player
+from bonus.Processing import read_stage_file
 
 try:
     player, path = read_stage_file("../stage-files/stage2.txt")
 except FileNotFoundError as e:
-    player, path = read_stage_file("./stage-files/stage2.txt")
+    try:
+        player, path = read_stage_file("./stage-files/stage2.txt")
+    except FileNotFoundError as f:
+        player, path = read_stage_file("./bonus/stage-files/stage2.txt")
 
 # test_cases takes in the moves the user wants to include in the unit tests.
 # deepcopies of the original path variable from the try-except block above is duplicated,
@@ -36,48 +38,10 @@ def modified_instance(request):
 try:
     correct = read_stage_file("./correct/st2-tests.txt", True)
 except FileNotFoundError as e:
-    correct = read_stage_file("./tests/correct/st2-tests.txt", True)
-
-def test_new_stage(modified_instance):    
-=======
-import pytest, copy
-from Stage import Stage
-from Player import Player
-from Processing import read_stage_file
-
-try:
-    player, path = read_stage_file("../stage-files/stage2.txt")
-except FileNotFoundError as e:
-    player, path = read_stage_file("./stage-files/stage2.txt")
-
-# test_cases takes in the moves the user wants to include in the unit tests.
-# deepcopies of the original path variable from the try-except block above is duplicated,
-# along with the player information and moves in a comprehension
-
-# To add a test case, add a new string of moves here
-test_cases = ["DdDdSAapaAAPs", "SPsSSPSssSSDSddDdDdP", "SPDddSSDDDDdAWwDsAsDDDd",
-    "AaWwWPwWDDdDdPAaAaASSsDdDPPpppPpDssD", "SPwDdSssssDddDSdssDdddDdDSSa",
-    "SPSSSPSSSSSDSdddddDAAAAAAWAaaWWWWWWwwwwwWDddDDPSSSDdWDDDddWDW", "DPDPSdddWWssAAAaaPSsSPW",
-    "WASDWASDWASDSPDDDDDddddDDdddDDppPPPAAWSSassdasw", "aaWPWWDDDddPWDdddddDDDdddDSaPss", 
-    "SPSSSPSssssDSDDDdddAAaaAAWaAAWwWWwWwwwWwwDdDdDPWDDDDDDDDDDSAPsaaAsAAAsSSSDdDdd",
-    "SpDDDddSsDDdaWWdSAsDdawWAwWaAdDDddwDPWWpWssS", "SpSSsPSssSsDsdDDDddAAAaaAWAaAWWWwwwwWwWwwPwwDddDDPW",
-    "DDsDddWWdddDdWDwPsAsAAAaASSsSDSsSDwWwDWwD", "WAaPssSSsDdpWSaASsSsDDwwWWSsSsAAWwWwwWWDdPSsDSAASSsssS",
-    "WAAPddDDSsSsSSDddaAAWwWWAAPDDssSSDDDSWDSDAWWWwWwDDwwwWwa"
-]
-
-@pytest.fixture(params=[
-    (copy.deepcopy(path), player, moves) for moves in test_cases
-])
-def modified_instance(request):
-    stage = Stage(request.param[0], Player(*request.param[1]))
-    stage.move(request.param[2], stage.pl.y, stage.pl.x)
-    return stage
-
-
-try:
-    correct = read_stage_file("./correct/st2-tests.txt", True)
-except FileNotFoundError as e:
-    correct = read_stage_file("./tests/correct/st2-tests.txt", True)
+    try:
+        correct = read_stage_file("./tests/correct/st2-tests.txt", True)
+    except FileNotFoundError as f:
+        correct = read_stage_file("./bonus/tests/correct/st2-tests.txt", True)
 
 def test_new_stage(modified_instance):
     
@@ -89,5 +53,4 @@ def test_new_stage(modified_instance):
     #         print(''.join(row))
     #     print()
     
->>>>>>> c6634ae778cd2e7e7342e4a535f7f0489d4071ba:bonus/tests/test_stage2.py
     assert modified_instance.grid in correct, f"\nReturned\n{"\n".join("".join(a) for a in modified_instance.grid)} \nInventory:{modified_instance.pl.inv}"

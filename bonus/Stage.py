@@ -1,6 +1,9 @@
 import sys
 from copy import deepcopy
-from Status import Status
+try:
+    from bonus.Status import Status
+except ModuleNotFoundError as m:
+    from Status import Status
 
 def clamp(value, min_value, max_value):
     '''Returns value if min_value <= value <= max_value; min_value if value < min_value; and max_value if value > max_value.'''

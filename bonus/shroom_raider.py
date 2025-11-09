@@ -8,7 +8,7 @@ from Status import Status
 
 def main_menu(stage_file, moves, output_file):
     if not stage_file:
-        stage_file = r"stage-files\stage-file-default.txt"
+        stage_file = r"stage-files/stage-file-default.txt"
         
     player_location, stage = read_stage_file(stage_file)
     level = Stage(stage, Player(*player_location))

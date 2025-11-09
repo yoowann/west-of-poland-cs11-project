@@ -39,7 +39,7 @@ def read_stage_file(stage_file, testing = False): # Returns player location as w
     return (player_x, player_y), stage
 
 def determine_if_high_score(new_score, stage_name):
-    score_file = "scoreboard/score-" + stage_name.split("\\")[-1]
+    score_file = "scoreboard/score-" + stage_name.split("/")[-1]
     is_high_score = False
 
     if os.path.exists(score_file):
@@ -55,7 +55,7 @@ def determine_if_high_score(new_score, stage_name):
     return is_high_score
 
 def update_scoreboard(new_score, player_name, stage_name):
-    score_file = "scoreboard/score-" + stage_name.split("\\")[-1]
+    score_file = "scoreboard/score-" + stage_name.split("/")[-1]
 
     if os.path.exists(score_file):
         with open(score_file, 'r') as f:
@@ -72,7 +72,7 @@ def update_scoreboard(new_score, player_name, stage_name):
             f.write(f'{new_score} {player_name}\n')
  
 def print_scoreboard(stage_name):
-    score_file = "scoreboard/score-" + stage_name.split("\\")[-1]
+    score_file = "scoreboard/score-" + stage_name.split("/")[-1]
 
     if os.path.exists(score_file):
         with open(score_file, 'r') as f:
