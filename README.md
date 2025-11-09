@@ -55,31 +55,11 @@ python3 shroom_raider.py -f <path_to_stage_file> -m <string_of_moves_enclosed_in
 python3 -m shroom_raider -f <path_to_stage_file> -m <string_of_moves_enclosed_in_quotes> -o <path_to_output_file>
 ```
 ## On Coding
-
-These are our thoughts on how we implemented the project.
-
-We separated the game and testing into components so that understanding and debugging the code would be easier. Separate files were used for displaying the game on the terminal, outputting results to files, and reading and handling unit tests.
-
-When we created the game, we decided to separate it into the following classes:
-1. Player
-    - This class represents the Player and contains information about the Player's position in the grid and currently held item.
-1. Stage
-    - This class represents the Stage that the Player is playing. The code for how the Stage is altered depending on the moves of the Player are contained here.
-    - Given a sequence of moves, individual moves are performed until an invalid move is found. At this point and beyond, no further moves are performed.
-    - Furthermore, given a sequence of moves where the Player either wins or loses at some point in the middle of this sequence, moves after this point are no longer performed.
-    - Updates to the grid after a single sequence of moves are done only after the last valid non-reset move.
-    - The functionality of the flamethrower item was implemented using iterative depth-first search. This algorithm can find connected components; thus, it is apt for finding and destroying all trees connected to a specific tree.
-1. Status
-    - This class is an enum with three possible values that represent the current state of the game: `Status.ONGOING`, `Status.WIN`, and `Status.LOSE`.
-
-While the game is ongoing, important information, such as the current state of the grid, any items the Player is standing on, the count of mushrooms the Player has collected, and others, are displayed, and the Player is asked for move sequences as input. When a win or loss state is reached, the final state of the grid is displayed, along with the total number of mushrooms the Player managed to collect.
-
-Unit Testing is implemented with Pytest. Stages and correct outputs are read from a text file, and given various move sequences, the outputs of the program are tested against the correct outputs.
-
+We separated the game into components so that the code could be easier to understand and debug.
 
 // Details on how you organized the code, how your algorithm works, and how you implemented it.
 
-## On Unit Testing
+## Unit Testing
 // A description of your unit tests, how they can be run, why you think they’re reasonably thorough, and how to add new tests.
 
 
