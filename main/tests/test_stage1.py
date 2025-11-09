@@ -1,12 +1,15 @@
 import pytest, copy
-from Stage import Stage
-from Player import Player
-from Processing import read_stage_file
+from main.Stage import Stage
+from main.Player import Player
+from main.Processing import read_stage_file
 
 try:
     player, path = read_stage_file("../stage-files/stage1.txt")
 except FileNotFoundError as e:
-    player, path = read_stage_file("./stage-files/stage1.txt")
+    try:
+        player, path = read_stage_file("./stage-files/stage1.txt")
+    except FileNotFoundError as f:
+        player, path = read_stage_file("./main/stage-files/stage1.txt")
 
 # test_cases takes in the moves the user wants to include in the unit tests.
 # deepcopies of the original path variable from the try-except block above is duplicated,
@@ -31,7 +34,10 @@ def modified_instance(request):
 try:
     correct = read_stage_file("./correct/st1-tests.txt", True)
 except FileNotFoundError as e:
-    correct = read_stage_file("./tests/correct/st1-tests.txt", True)
+    try:
+        correct = read_stage_file("./tests/correct/st1-tests.txt", True)
+    except FileNotFoundError as f:
+        correct = read_stage_file("./main/tests/correct/st1-tests.txt", True)
 
 def test_new_stage(modified_instance):
     
