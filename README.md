@@ -65,3 +65,4 @@ We separated the game into components so that the code could be easier to unders
 
 ## Bonus Features
 // A description of all the bonus features you’d like to be credited for bonus points.
+We put a lot of bonus features!
